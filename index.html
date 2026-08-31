@@ -83,6 +83,20 @@
     padding: 5px 12px; color: var(--ink);
   }
   .chips li.now { background: var(--vg); border-color: var(--verify); color: var(--verify); font-weight: 600; }
+  .proof {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(118px, 1fr));
+    gap: 14px 20px; margin: 0 0 26px; padding: 16px 18px;
+    background: var(--vg); border-left: 3px solid var(--verify); border-radius: 0 4px 4px 0;
+  }
+  .proof div { min-width: 0; }
+  .proof dt {
+    font-size: 26px; font-weight: 800; letter-spacing: -0.03em; line-height: 1;
+    color: var(--verify); font-variant-numeric: tabular-nums;
+  }
+  .proof dd {
+    margin: 4px 0 0; font-family: var(--f-mono); font-size: 11px; line-height: 1.35;
+    letter-spacing: 0.03em; color: var(--verify);
+  }
   .links { display: flex; flex-wrap: wrap; gap: 18px; font-size: 15px; }
 
   /* ---- sections ---- */
@@ -188,6 +202,12 @@
       <li>5 years engineering experience</li>
       <li>Calgary (Mountain Time) · remote across Canada · open to relocation</li>
     </ul>
+    <dl class="proof">
+      <div><dt>26</dt><dd>public repositories</dd></div>
+      <div><dt>26</dt><dd>green in CI, zero failing</dd></div>
+      <div><dt>3</dt><dd>services live right now</dd></div>
+      <div><dt>5</dt><dd>months, all of it</dd></div>
+    </dl>
     <p class="links">
       <a href="https://github.com/sadvi11">github.com/sadvi11</a>
       <a href="https://www.linkedin.com/in/sadhvi-sharma-5789a6249">LinkedIn</a>
@@ -312,9 +332,12 @@
   </section>
 
   <section>
-    <h2>The bugs I found in my own work</h2>
+    <h2>Bugs I found in my own work — before anyone else could</h2>
     <p class="muted" style="margin-bottom:20px">
-      Harder to fake than a green badge, and the reason I trust the rest of it.
+      Every one of these was caught by me, in my own code, and fixed with a test that
+      goes red if the fix is removed. <b>None of it reached a user.</b> They are here
+      because finding your own faults is harder to fake than a green badge — and it is
+      the difference between an engineer who is careful and one who only looks careful.
     </p>
     <div class="bugs">
       <div class="bug">
