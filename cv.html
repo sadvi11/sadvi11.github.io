@@ -11,29 +11,30 @@
   body {
     margin: 0; background: #fff; color: #111;
     font-family: Calibri, Carlito, "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-size: 10pt; line-height: 1.3;
+    font-size: 9.4pt; line-height: 1.26;
   }
-  .page { max-width: 190mm; margin: 0 auto; padding: 11mm 13mm; }
-  h1 { font-size: 19pt; font-weight: 700; margin: 0 0 2px; }
+  .page { max-width: 190mm; margin: 0 auto; padding: 9mm 11mm; }
+  h1 { font-size: 17pt; font-weight: 700; margin: 0 0 2px; }
   .role { font-size: 10.6pt; font-weight: 600; color: #333; margin: 0 0 5px; }
   .contact { font-size: 9.4pt; color: #222; margin: 0 0 2px; }
   .auth { font-size: 9.6pt; font-weight: 700; margin: 4px 0 0; }
   hr { border: 0; border-top: 1.5px solid #111; margin: 8px 0 0; }
   h2 {
-    font-size: 10.2pt; font-weight: 700; text-transform: uppercase;
-    letter-spacing: 0.05em; margin: 11px 0 4px; padding-bottom: 2px;
+    font-size: 9.6pt; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.05em; margin: 8px 0 3px; padding-bottom: 2px;
     border-bottom: 1px solid #999;
   }
-  p { margin: 0 0 5px; }
-  ul { margin: 0 0 6px; padding-left: 16px; }
-  li { margin-bottom: 2px; }
-  .jobtitle { font-size: 10.4pt; font-weight: 700; margin: 7px 0 0; }
+  p { margin: 0 0 4px; }
+  ul { margin: 0 0 5px; padding-left: 15px; }
+  li { margin-bottom: 1.5px; }
+  .jobtitle { font-size: 10.2pt; font-weight: 700; margin: 6px 0 0; }
+  .job { break-inside: avoid; page-break-inside: avoid; }
   .meta { font-size: 9.6pt; color: #333; margin: 0 0 3px; }
   .skill { margin: 0 0 3px; }
-  .proj { margin: 0 0 6px; }
+  .proj { margin: 0 0 5px; break-inside: avoid; page-break-inside: avoid; }
   .proj .pt { font-weight: 700; margin: 0; }
   @page { size: A4; margin: 0; }
-  @media print { body { font-size: 9.6pt; } .page { padding: 10mm 12mm; } }
+  @media print { body { font-size: 9pt; } .page { padding: 9mm 11mm; } }
 </style>
 </head>
 <body>
@@ -47,26 +48,21 @@
   <hr>
 
   <h2>Professional Summary</h2>
-  <p>Cloud and DevOps engineer with five years of experience, including two and a half years keeping mobile network systems running for Bell Canada, T-Mobile US and Orange while employed by Nokia, against a contractual uptime guarantee of 99.9 per cent. Experienced across Amazon Web Services and Microsoft Azure, Kubernetes, Terraform, and continuous integration and delivery pipelines. Comfortable carrying production on-call. Known for testing that safety controls actually work rather than assuming they do. Twenty-six public code repositories, every one passing its automated tests.</p>
+  <p>Cloud and DevOps engineer, five years' experience, including two and a half years keeping mobile network systems running for Bell Canada, T-Mobile US and Orange at Nokia against a contractual 99.9 per cent uptime guarantee. Amazon Web Services and Microsoft Azure, Kubernetes, Terraform, CI/CD pipelines, and production on-call. Known for testing that safety controls actually work rather than assuming they do. Twenty-six public repositories, every one passing its automated tests.</p>
 
   <h2>Technical Skills</h2>
-  <p class="skill"><b>Cloud platforms:</b> Amazon Web Services (EKS, ECS Fargate, Lambda, VPC, Transit Gateway, S3, RDS, Aurora, DynamoDB, IAM, Organizations, KMS, CloudWatch, Bedrock, SageMaker). Microsoft Azure (Container Apps, AKS, Container Registry, Entra ID, Key Vault, Log Analytics).</p>
-  <p class="skill"><b>Infrastructure as code:</b> Terraform, AWS CloudFormation and StackSets, Azure Bicep, Helm, Kustomize.</p>
-  <p class="skill"><b>Containers and orchestration:</b> Docker, Kubernetes, Argo CD, GitOps.</p>
-  <p class="skill"><b>CI/CD:</b> GitHub Actions, Azure DevOps Pipelines, OIDC federation with no stored credentials.</p>
-  <p class="skill"><b>Security and compliance:</b> Open Policy Agent and Rego, Checkov, Trivy, Service Control Policies, least-privilege IAM. Control mapping for SOC 2, PCI DSS, and Canadian privacy law including PIPEDA, provincial FIPPA and OSFI B-13.</p>
-  <p class="skill"><b>Monitoring and reliability:</b> Prometheus, Grafana, CloudWatch, service level objectives and error budgets, blameless postmortems, production on-call.</p>
-  <p class="skill"><b>Artificial intelligence:</b> Amazon Bedrock, Model Context Protocol, retrieval-augmented generation, pgvector, model evaluation, prompt-injection testing.</p>
-  <p class="skill"><b>Programming and scripting:</b> Python (boto3, FastAPI, Flask), Bash, HCL, SQL.</p>
-  <p class="skill"><b>Operating systems and networking:</b> Linux, TCP/IP, DNS, load balancing, TLS, VPN, network segmentation.</p>
+  <p class="skill"><b>Cloud:</b> Amazon Web Services (EKS, ECS Fargate, Lambda, VPC, Transit Gateway, S3, RDS, Aurora, DynamoDB, IAM, Organizations, KMS, CloudWatch, Bedrock, SageMaker). Microsoft Azure (Container Apps, AKS, Container Registry, Entra ID, Key Vault, Log Analytics).</p>
+  <p class="skill"><b>Infrastructure and containers:</b> Terraform, AWS CloudFormation and StackSets, Azure Bicep, Docker, Kubernetes, Helm, Kustomize, Argo CD, GitOps.</p>
+  <p class="skill"><b>CI/CD and security:</b> GitHub Actions, Azure DevOps Pipelines, OIDC federation with no stored credentials. Open Policy Agent and Rego, Checkov, Trivy, Service Control Policies, least-privilege IAM. Control mapping for SOC 2, PCI DSS, PIPEDA, provincial FIPPA and OSFI B-13.</p>
+  <p class="skill"><b>Reliability and monitoring:</b> Prometheus, Grafana, CloudWatch, service level objectives and error budgets, blameless postmortems, production on-call. Linux, TCP/IP, DNS, load balancing, TLS, VPN, network segmentation.</p>
+  <p class="skill"><b>Programming and AI:</b> Python (boto3, FastAPI, Flask), Bash, HCL, SQL. Amazon Bedrock, Model Context Protocol, retrieval-augmented generation, pgvector, model evaluation, prompt-injection testing.</p>
 
   <h2>Work Experience</h2>
 
   <p class="jobtitle">AI Hardware and Technology Specialist</p>
   <p class="meta">Meta, through Influence Marketing | Calgary, Alberta | October 2025 to present</p>
   <ul>
-    <li>Deliver technical enablement on Meta artificial intelligence products and extended reality hardware.</li>
-    <li>Developed and delivered training for more than 50 retail staff, reducing escalated technical issues by approximately 30 per cent.</li>
+    <li>Technical enablement on Meta AI products and extended reality hardware. Delivered training for more than 50 retail staff, reducing escalated issues by approximately 30 per cent.</li>
     <li>Build and maintain all cloud infrastructure listed under Selected Projects outside of working hours.</li>
   </ul>
 
@@ -75,39 +71,35 @@
   <ul>
     <li>Operated 5G mobile core network systems as containerised workloads on Kubernetes and OpenStack in live production, serving Bell Canada, T-Mobile US and Orange against a contractual availability guarantee of 99.9 per cent.</li>
     <li>Delivered a staged multi-site upgrade from 4G to 5G with zero subscriber downtime, sequencing sites to contain risk rather than migrating in parallel. Recognised with a Nokia appreciation award.</li>
-    <li>Carried production on-call, led structured root cause analysis after incidents, and documented findings so the same fault could be recognised faster next time.</li>
-    <li>Performed zero-downtime rolling upgrades as a contractual requirement, using health checks to gate each step.</li>
+    <li>Carried production on-call, led root cause analysis after incidents, and performed zero-downtime rolling upgrades gated by health checks as a contractual requirement.</li>
     <li>Worked directly with international carrier customers, translating technical constraints into terms non-specialists could act on.</li>
   </ul>
 
   <p class="jobtitle">RF and Systems Engineer</p>
-  <p class="meta">AA Electro Magnetic Test Labs | India | 2018 to 2020</p>
-  <ul>
-    <li>Performed electromagnetic compatibility testing and measurement against published standards.</li>
-  </ul>
+  <p class="meta">AA Electro Magnetic Test Labs | India | 2018 to 2020. Electromagnetic compatibility testing and measurement against published standards.</p>
 
   <h2>Selected Projects</h2>
   <p>All are public, all pass automated tests on every change, and every figure below can be verified at github.com/sadvi11.</p>
 
   <div class="proj">
     <p class="pt">terraform-guard-mcp - Python, Terraform, Model Context Protocol</p>
-    <p>Built a tool that inspects a proposed infrastructure change and refuses to approve one that would destroy data. The decision is made by code rather than by an artificial intelligence model, so it cannot be talked out of it. 34 automated tests. The pipeline deliberately removes each of the three safety controls and fails the build if the tests still pass without them. Identified and fixed a security weakness in my own tool two hours after publishing it.</p>
+    <p>A tool that inspects a proposed infrastructure change and refuses to approve one that would destroy data. The decision is made by code, not by an AI model, so it cannot be talked out of it. <b>34 automated tests</b>; the pipeline removes each of the three safety controls on purpose and fails if the tests still pass. Found and fixed a security weakness in my own tool two hours after publishing it.</p>
   </div>
   <div class="proj">
     <p class="pt">eks-ecommerce-microservices - Terraform, Helm, Amazon EKS</p>
-    <p>Deployed a twelve-component shopping application written in five programming languages across two availability zones on Kubernetes. The pipeline deletes the cache server on every change and confirms the shopping cart data survived, so the reliability claim is tested rather than asserted.</p>
+    <p>A twelve-component shopping application in five programming languages across two availability zones on Kubernetes. The pipeline deletes the cache server on every change and confirms the shopping cart data survived, so the reliability claim is tested rather than asserted.</p>
   </div>
   <div class="proj">
     <p class="pt">aws-multi-account-governance - Terraform, AWS Organizations</p>
-    <p>Defined organisation-wide security rules for a multi-account AWS environment: six control policies, permission limits for delegated administrators, and 44 tests confirming the rules do what they claim. Includes an enforced restriction keeping data inside Canadian regions, mapped to PIPEDA, provincial privacy law and OSFI B-13 for regulated financial institutions.</p>
+    <p>Organisation-wide security rules for a multi-account AWS environment: six control policies, permission limits for delegated administrators, <b>44 tests</b> confirming the rules do what they claim, and an enforced restriction keeping data inside Canadian regions, mapped to PIPEDA, provincial privacy law and OSFI B-13.</p>
   </div>
   <div class="proj">
-    <p class="pt">aws-ec2-read-only-agent - Python, boto3, large language model tool use</p>
-    <p>An inventory tool, and an assistant that answers questions about an AWS account but is prevented in code from changing anything, using an allow-list checked before any request leaves the machine. 36 tests, none requiring cloud credentials.</p>
+    <p class="pt">aws-ec2-read-only-agent - Python, boto3, AI tool use</p>
+    <p>An assistant that answers questions about an AWS account but is prevented in code from changing anything, using an allow-list checked before any request leaves the machine. <b>36 tests</b>, none requiring cloud credentials.</p>
   </div>
   <div class="proj">
     <p class="pt">sre-incident-practice, gitops-argocd-kubernetes, bedrock-rag-app</p>
-    <p>Incident write-ups from real outages I handled, with unresolved follow-up items left visibly open. A deployment system where the pipeline deliberately breaks the running service and fails unless it repairs itself within seconds. A document question-answering service on Amazon Bedrock that reports when it lacks the information rather than inventing an answer.</p>
+    <p>Incident write-ups from real outages I handled, follow-up items left visibly open. A deployment system whose pipeline breaks the running service on purpose and fails unless it self-repairs. A document question-answering service on Amazon Bedrock that reports when it lacks the information rather than inventing an answer.</p>
   </div>
 
   <h2>Education</h2>
