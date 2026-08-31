@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Sadhvi Sharma — CV</title>
+<style>
+  :root {
+    --ink: #14181d; --muted: #4d545c; --rule: #c9ccc6; --rule-2: #e6e7e3;
+    --accent: #a63d2f; --verify: #1d6b58;
+    --f: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --m: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: #fff; color: var(--ink);
+    font-family: var(--f); font-size: 8pt; line-height: 1.25;
+    -webkit-font-smoothing: antialiased;
+  }
+  .page { max-width: 190mm; margin: 0 auto; padding: 9mm 11mm; }
+
+  header { border-bottom: 2.5px solid var(--ink); padding-bottom: 6px; margin-bottom: 8px; }
+  .top { display: flex; justify-content: space-between; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+  h1 { font-size: 20pt; letter-spacing: -0.028em; font-weight: 800; margin: 0; line-height: 1; }
+  .title { font-size: 10pt; font-weight: 600; color: var(--muted); }
+  .contact {
+    font-family: var(--m); font-size: 7.6pt; color: var(--muted);
+    margin-top: 6px; display: flex; flex-wrap: wrap; gap: 4px 14px;
+  }
+  .contact b { color: var(--ink); font-weight: 600; }
+  .status {
+    margin-top: 6px; font-size: 8.4pt; font-weight: 600; color: var(--verify);
+  }
+
+  .summary { margin: 0 0 8px; font-size: 8.6pt; line-height: 1.34; }
+  .summary b { font-weight: 700; }
+
+  h2 {
+    font-family: var(--m); font-size: 7pt; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--accent); font-weight: 700; margin: 6px 0 3px;
+    border-bottom: 1px solid var(--rule); padding-bottom: 3px;
+  }
+
+  .job { margin-bottom: 5px; }
+  .job .hd { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+  .job h3 { font-size: 9pt; font-weight: 700; margin: 0; letter-spacing: -0.008em; }
+  .job .when { font-family: var(--m); font-size: 7.4pt; color: var(--muted); white-space: nowrap; }
+  .job .org { font-size: 8.6pt; color: var(--muted); margin: 1px 0 3px; }
+  ul { margin: 0; padding-left: 13px; }
+  li { margin-bottom: 2px; }
+  li b { font-weight: 600; }
+
+  .proj { margin-bottom: 3.5px; }
+  .proj .nm { font-family: var(--m); font-size: 8.4pt; font-weight: 700; }
+  .proj .nm span { font-weight: 400; color: var(--muted); }
+  .proj p { margin: 1px 0 0; }
+
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 0 22px; }
+  .skills p { margin: 0 0 3px; }
+  .skills b { font-weight: 700; }
+
+  .foot {
+    margin-top: 6px; padding-top: 5px; border-top: 1px solid var(--rule-2);
+    font-family: var(--m); font-size: 7.2pt; color: var(--muted);
+  }
+  a { color: inherit; text-decoration: none; }
+
+  @page { size: A4; margin: 0; }
+  @media print { body { font-size: 8.1pt; } .page { padding: 9mm 11mm; } }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header>
+    <div class="top">
+      <h1>Sadhvi Sharma</h1>
+      <div class="title">Cloud &amp; Platform Engineer</div>
+    </div>
+    <div class="contact">
+      <span><b>sadhvisharma763@gmail.com</b></span>
+      <span>sadvi11.github.io</span>
+      <span>github.com/sadvi11</span>
+      <span>linkedin.com/in/sadhvi-sharma-5789a6249</span>
+      <span>Calgary, Alberta (MT)</span>
+    </div>
+    <div class="status">
+      Permanent Resident — no sponsorship required · Available immediately · Remote across Canada, open to relocation
+    </div>
+  </header>
+
+  <p class="summary">
+    Five years in cloud infrastructure and telecom, including <b>2.5 years running 5G core
+    networks at Nokia against a 99.9% SLA</b> for carriers including Bell Canada. I build
+    infrastructure the way that job taught me to: <b>every guard I ship is removed on purpose
+    in CI, and the build fails if the tests still pass without it.</b> 26 public repositories,
+    every one green.
+  </p>
+
+  <h2>Experience</h2>
+
+  <div class="job">
+    <div class="hd">
+      <h3>AI Hardware &amp; Technology Specialist</h3>
+      <div class="when">Oct 2025 – present</div>
+    </div>
+    <div class="org">Meta, via Influence Marketing · Calgary</div>
+    <ul>
+      <li>Technical enablement on Meta AI products and XR hardware; training delivered to <b>50+ retail staff</b>. Infrastructure work below built outside working hours.</li>
+    </ul>
+  </div>
+
+  <div class="job">
+    <div class="hd">
+      <h3>Solution Engineer, Cloud Core Network</h3>
+      <div class="when">Dec 2022 – Jul 2025</div>
+    </div>
+    <div class="org">Nokia · Delhi</div>
+    <ul>
+      <li>Operated <b>5G core network functions</b> — AMF, SMF, UPF, NRF — as containerised workloads on Kubernetes and OpenStack in carrier production, against a <b>99.9% SLA</b>, for Bell Canada, T-Mobile US and Orange.</li>
+      <li>Delivered a wave-based multi-site <b>4G→5G migration with zero subscriber downtime</b>. Nokia appreciation award.</li>
+      <li>Production on-call with structured root cause analysis; zero-downtime rolling upgrades as a contractual requirement.</li>
+    </ul>
+  </div>
+
+  <div class="job">
+    <div class="hd">
+      <h3>RF &amp; Systems Engineer</h3>
+      <div class="when">2018 – 2020</div>
+    </div>
+    <div class="org">AA Electro Magnetic Test Labs · India</div>
+  </div>
+
+  <h2>Selected engineering — all public, all green in CI</h2>
+
+  <div class="proj">
+    <div class="nm">terraform-guard-mcp <span>· MCP · Python · Terraform</span></div>
+    <p>An MCP server that reads a Terraform plan and <b>refuses to bless a dangerous one</b> — the verdict is a Python comparison, so no wording in the plan argues it down. <b>34 tests; all three guards removed on purpose in CI.</b> Found and fixed a prompt-injection hole in my own tool two hours after publishing it.</p>
+  </div>
+  <div class="proj">
+    <div class="nm">eks-ecommerce-microservices <span>· Terraform · Helm · EKS</span></div>
+    <p>12 workloads, 8 microservices in 5 languages, 2 AZs. <b>CI writes a cart key, deletes the Redis pod, and asserts the key came back</b> — the persistence claim is tested, not stated.</p>
+  </div>
+  <div class="proj">
+    <div class="nm">aws-multi-account-governance <span>· Terraform · Organizations</span></div>
+    <p>6 Service Control Policies, permission boundaries, <b>44 tests</b>. Five SCPs attach at the <b>root</b>, because a guardrail attached per-OU is one a new OU silently skips. Canadian data residency enforced as a <b>Deny</b>, mapped to PIPEDA, BC FIPPA and OSFI B-13.</p>
+  </div>
+  <div class="proj">
+    <div class="nm">aws-ec2-read-only-agent <span>· Python · boto3 · Claude tool use</span></div>
+    <p>Read-only enforced by a <b>Python allowlist on botocore's request hook</b>, so a persuaded model still cannot call a mutating API. <b>36 tests</b>, none needing credentials.</p>
+  </div>
+  <div class="proj">
+    <div class="nm">sre-incident-practice · bedrock-rag-app · gitops-argocd-kubernetes</div>
+    <p>Real postmortems with open action items left open · RAG on Bedrock with Titan V2 and pgvector, grounded so it reports missing context · GitOps where <b>CI breaks production on purpose and fails unless Argo CD heals it</b>.</p>
+  </div>
+
+  <h2>Technical</h2>
+  <div class="skills cols">
+    <div>
+      <p><b>Cloud</b> — AWS (EKS, ECS Fargate, Lambda, VPC, Transit Gateway, S3, RDS/Aurora, DynamoDB, IAM, Organizations, KMS, CloudWatch, Bedrock, SageMaker) · Azure (Container Apps, AKS, ACR, Entra ID, Key Vault, Log Analytics)</p>
+      <p><b>IaC</b> — Terraform · CloudFormation StackSets · Bicep · Helm · Kustomize</p>
+      <p><b>Containers</b> — Docker · Kubernetes · Argo CD · GitOps</p>
+    </div>
+    <div>
+      <p><b>CI/CD</b> — GitHub Actions · Azure DevOps · OIDC federation (no stored credentials)</p>
+      <p><b>Security</b> — OPA/Rego · Checkov · Trivy · SCPs · least-privilege IAM · SOC 2, PCI DSS, PIPEDA control mapping</p>
+      <p><b>SRE</b> — Prometheus · Grafana · SLOs and error budgets · blameless postmortems · production on-call</p>
+      <p><b>AI</b> — Bedrock · MCP · AgentCore · RAG · pgvector · LLM evaluation · prompt-injection testing</p>
+      <p><b>Languages</b> — Python (boto3, FastAPI, Flask) · Bash · HCL · SQL</p>
+    </div>
+  </div>
+
+  <div class="cols">
+    <div>
+      <h2>Education</h2>
+      <p><b>M.Tech, Electronics &amp; Communication Engineering</b> — University of Delhi. Full merit scholarship.<br>
+      <b>B.Tech</b> — Shri Mata Vaishno Devi University.</p>
+      <h2>Certification</h2>
+      <p>Microsoft Azure Fundamentals (AZ-900).<br>AWS Solutions Architect Associate — sitting September 2026.</p>
+    </div>
+    <div>
+      <h2>Leadership &amp; communication</h2>
+      <p><b>Area Director, Toastmasters International (District 42)</b> — accountable for four to six clubs, their membership and results, with no authority over any of them. Twice-yearly club visits with written reports, Area Council meetings, area contests.</p>
+      <p><b>Second place, Division — International Speech Contest.</b> Won at club and area level first.</p>
+      <p><b>Open source</b> — aquasecurity/trivy-checks #602, open pull request allowing TLS 1.3 in a policy that rejected it.</p>
+    </div>
+  </div>
+
+  <div class="foot">
+    Every figure verifiable at github.com/sadvi11 · Live services and full detail at sadvi11.github.io
+  </div>
+
+</div>
+</body>
+</html>
