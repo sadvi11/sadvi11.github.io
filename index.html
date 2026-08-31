@@ -1,0 +1,450 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Sadhvi Sharma — cloud and platform engineer in Calgary. Five years in cloud infrastructure and telecom, including 5G core for Bell Canada against a 99.9% SLA. Permanent Resident, available immediately.">
+<meta property="og:title" content="Sadhvi Sharma — Cloud &amp; Platform Engineer">
+<meta property="og:description" content="I keep things running that are not allowed to fail — and I prove the checks can fail before I trust them.">
+<meta property="og:type" content="website">
+<title>Sadhvi Sharma</title>
+<style>
+  :root {
+    --ground:  #f7f6f3;
+    --card:    #ffffff;
+    --ink:     #12161b;
+    --muted:   #5b626b;
+    --rule:    #e2e0da;
+    --rule-2:  #cfccc4;
+    --accent:  #a63d2f;
+    --verify:  #1d6b58;
+    --vg:      #edf3f0;
+    --chip:    #eceae4;
+
+    --f-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --f-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground: #12151a; --card: #191d23; --ink: #e8e9e5; --muted: #9aa1ab;
+      --rule: #2a2f36; --rule-2: #3a4048; --accent: #e28a78; --verify: #6fc0a6;
+      --vg: #16241f; --chip: #21262d;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground: #12151a; --card: #191d23; --ink: #e8e9e5; --muted: #9aa1ab;
+    --rule: #2a2f36; --rule-2: #3a4048; --accent: #e28a78; --verify: #6fc0a6;
+    --vg: #16241f; --chip: #21262d;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--ground); color: var(--ink);
+    font-family: var(--f-sans); font-size: 16px; line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid var(--rule-2); }
+  a:hover, a:focus-visible { border-bottom-color: var(--accent); }
+  a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  .wrap { max-width: 780px; margin: 0 auto; padding: 0 24px; }
+
+  /* ---- hero ---- */
+  header { padding: 72px 0 44px; border-bottom: 3px solid var(--ink); }
+  .kicker {
+    font-family: var(--f-mono); font-size: 11.5px; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--muted); margin: 0 0 18px;
+  }
+  h1 {
+    font-size: clamp(42px, 9vw, 76px); line-height: 0.96; letter-spacing: -0.035em;
+    font-weight: 800; margin: 0 0 20px; text-wrap: balance;
+  }
+  .lede { font-size: clamp(18px, 2.6vw, 21px); line-height: 1.45; margin: 0 0 26px; max-width: 30ch; text-wrap: balance; }
+  .lede b { font-weight: 700; }
+  .lede .plain {
+    display: block; margin-top: 14px; font-size: 16px; line-height: 1.5;
+    color: var(--muted); font-weight: 400; max-width: 40ch;
+  }
+  .roles {
+    font-size: 15px; line-height: 1.5; margin: 0 0 20px; max-width: 54ch;
+    color: var(--ink);
+  }
+  .roles span {
+    display: block; font-family: var(--f-mono); font-size: 11px;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted);
+    margin-bottom: 5px; font-weight: 600;
+  }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 24px; padding: 0; list-style: none; }
+  .chips li {
+    font-family: var(--f-mono); font-size: 11.5px; letter-spacing: 0.04em;
+    background: var(--chip); border: 1px solid var(--rule); border-radius: 100px;
+    padding: 5px 12px; color: var(--ink);
+  }
+  .chips li.now { background: var(--vg); border-color: var(--verify); color: var(--verify); font-weight: 600; }
+  .links { display: flex; flex-wrap: wrap; gap: 18px; font-size: 15px; }
+
+  /* ---- sections ---- */
+  section { padding: 46px 0; border-bottom: 1px solid var(--rule); }
+  h2 {
+    font-family: var(--f-mono); font-size: 11.5px; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--accent); margin: 0 0 22px; font-weight: 700;
+  }
+  h3 { font-size: 22px; letter-spacing: -0.015em; font-weight: 700; margin: 0 0 8px; text-wrap: balance; }
+  p { margin: 0 0 14px; max-width: 66ch; }
+  p:last-child { margin-bottom: 0; }
+  .muted { color: var(--muted); }
+
+  /* ---- the thesis ---- */
+  .thesis {
+    font-size: clamp(22px, 3.6vw, 30px); line-height: 1.28; letter-spacing: -0.02em;
+    font-weight: 700; margin: 0 0 16px; max-width: 24ch; text-wrap: balance;
+  }
+  .thesis em { font-style: normal; color: var(--accent); }
+
+  /* ---- evidence line: the signature device ---- */
+  .ev {
+    display: flex; gap: 9px; align-items: flex-start;
+    font-family: var(--f-mono); font-size: 12.5px; line-height: 1.55;
+    color: var(--verify); background: var(--vg);
+    border-left: 3px solid var(--verify); border-radius: 0 3px 3px 0;
+    padding: 8px 12px; margin: 10px 0 0;
+  }
+  .ev::before { content: "✓"; font-weight: 700; flex-shrink: 0; }
+  .ev.warn { color: var(--muted); background: var(--chip); border-left-color: var(--rule-2); }
+  .ev.warn::before { content: "—"; }
+
+  /* ---- projects ---- */
+  .proj { padding: 26px 0; border-bottom: 1px solid var(--rule); }
+  .proj:last-of-type { border-bottom: 0; padding-bottom: 0; }
+  .proj .meta {
+    font-family: var(--f-mono); font-size: 11.5px; color: var(--muted);
+    letter-spacing: 0.03em; margin: 0 0 10px;
+  }
+  .stat { display: flex; flex-wrap: wrap; gap: 26px; margin: 16px 0 0; }
+  .stat div { min-width: 92px; }
+  .stat b {
+    display: block; font-size: 27px; letter-spacing: -0.03em; font-weight: 800;
+    font-variant-numeric: tabular-nums; line-height: 1.1;
+  }
+  .stat span { font-family: var(--f-mono); font-size: 11px; color: var(--muted); letter-spacing: 0.05em; }
+
+  /* ---- bugs table ---- */
+  .bugs { display: flex; flex-direction: column; gap: 0; }
+  .bug { padding: 16px 0; border-bottom: 1px solid var(--rule); }
+  .bug:last-child { border-bottom: 0; }
+  .bug p { margin: 0; }
+  .bug .what { font-weight: 600; }
+  .bug .learn { color: var(--muted); font-size: 15px; margin-top: 5px; }
+
+  /* ---- repo grid ---- */
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 20px 26px; }
+  .grid h4 {
+    font-family: var(--f-mono); font-size: 11px; letter-spacing: 0.13em;
+    text-transform: uppercase; color: var(--muted); margin: 0 0 9px; font-weight: 600;
+  }
+  .grid ul { list-style: none; margin: 0; padding: 0; font-size: 15px; }
+  .grid li { padding: 3px 0; }
+
+  /* ---- background ---- */
+  .role { padding: 16px 0; border-bottom: 1px solid var(--rule); }
+  .role:last-child { border-bottom: 0; }
+  .role .when { font-family: var(--f-mono); font-size: 11.5px; color: var(--muted); letter-spacing: 0.04em; }
+  .role h3 { font-size: 18px; margin: 3px 0 6px; }
+
+  footer { padding: 46px 0 80px; }
+  footer .big { font-size: clamp(22px, 3.4vw, 28px); font-weight: 700; letter-spacing: -0.02em; margin: 0 0 18px; max-width: 24ch; text-wrap: balance; }
+
+  @media (max-width: 560px) {
+    header { padding: 48px 0 34px; }
+    section { padding: 36px 0; }
+    .stat { gap: 18px; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+</style>
+
+<div class="wrap">
+
+  <header>
+    <p class="kicker">Cloud &amp; platform engineer · Calgary, Alberta</p>
+    <h1>Sadhvi Sharma</h1>
+    <p class="lede">
+      I keep things running that are <b>not allowed to fail</b> — and I prove the
+      checks can fail before I trust them.
+      <span class="plain">Five years in cloud infrastructure and telecom, including
+      2.5 years running 5G core networks for Bell Canada against a 99.9% uptime
+      guarantee.</span>
+    </p>
+    <p class="roles">
+      <span>Considered for</span>
+      Cloud Engineer · DevOps Engineer · Platform Engineer · Site Reliability
+      Engineer · Infrastructure Engineer · AI&nbsp;/&nbsp;ML Platform Engineer
+    </p>
+    <ul class="chips">
+      <li class="now">Available immediately</li>
+      <li>Permanent Resident — no sponsorship required</li>
+      <li>5 years engineering experience</li>
+      <li>Calgary (Mountain Time) · remote across Canada · open to relocation</li>
+    </ul>
+    <p class="links">
+      <a href="https://github.com/sadvi11">github.com/sadvi11</a>
+      <a href="https://www.linkedin.com/in/sadhvi-sharma-5789a6249">LinkedIn</a>
+      <a href="mailto:sadhvisharma763@gmail.com">sadhvisharma763@gmail.com</a>
+    </p>
+  </header>
+
+  <section>
+    <h2>The idea the whole portfolio is built on</h2>
+    <p class="thesis">A check that cannot fail is <em>worse</em> than no check.</p>
+    <p>
+      It produces confidence without coverage. So every guard I ship gets removed
+      on purpose in CI, and the build fails if the tests still pass without it. A
+      green badge means nothing until you have watched it go red for the right
+      reason.
+    </p>
+    <div class="ev">26 public repositories. Every one green in CI, checked today.</div>
+  </section>
+
+  <section>
+    <h2>Where the engineering actually is</h2>
+
+    <div class="proj">
+      <p class="meta">MCP · Python · Terraform</p>
+      <h3><a href="https://github.com/sadvi11/terraform-guard-mcp">terraform-guard-mcp</a></h3>
+      <p>
+        An MCP server any AI assistant can call. It reads a Terraform plan and
+        <b>refuses to bless a dangerous one</b> — the verdict is a Python
+        comparison, so no wording in the plan argues it down.
+      </p>
+      <p class="muted">
+        There is a test where the resource is named
+        <code>definitely_safe_to_delete_approved_by_cto</code> and it still blocks,
+        because the name was never an input to the comparison. Then I attacked my
+        own tool and found that the attacker-controlled resource name was printed
+        raw into the text the model reads — so they could not change the verdict,
+        but they could forge a fake system instruction around it. Fixed at parse
+        time, which covers all five tools rather than one.
+      </p>
+      <div class="stat">
+        <div><b>34</b><span>TESTS</span></div>
+        <div><b>3</b><span>GUARDS REMOVED IN CI</span></div>
+        <div><b>5</b><span>MCP TOOLS</span></div>
+      </div>
+      <div class="ev">Verified end to end against a real MCP client — full handshake, all five tools, BLOCK returned over the wire.</div>
+    </div>
+
+    <div class="proj">
+      <p class="meta">Terraform · Helm · AWS EKS</p>
+      <h3><a href="https://github.com/sadvi11/eks-ecommerce-microservices">eks-ecommerce-microservices</a></h3>
+      <p>
+        Twelve workloads — eight microservices in five languages, two databases, a
+        cache and a message broker. Terraform builds the cluster; one templated
+        Helm topology renders all twelve rather than twenty-four copy-pasted
+        manifests.
+      </p>
+      <p class="muted">
+        The databases use <code>Recreate</code>, not <code>RollingUpdate</code>,
+        because a ReadWriteOnce EBS volume attaches to one node and a rolling
+        update deadlocks. Accepted downtime, chosen deliberately rather than
+        discovered at 2am. It took nine CI runs to go green and the commit history
+        says why — including that a container running as uid 0 with all
+        capabilities dropped is <b>not</b> root.
+      </p>
+      <div class="stat">
+        <div><b>12</b><span>WORKLOADS</span></div>
+        <div><b>5</b><span>LANGUAGES</span></div>
+        <div><b>2</b><span>AVAILABILITY ZONES</span></div>
+      </div>
+      <div class="ev">CI deploys the whole stack to a throwaway cluster on every commit, writes a cart key, deletes the Redis pod, and asserts the key came back.</div>
+    </div>
+
+    <div class="proj">
+      <p class="meta">Python · boto3 · Claude tool use</p>
+      <h3><a href="https://github.com/sadvi11/aws-ec2-read-only-agent">aws-ec2-read-only-agent</a></h3>
+      <p>
+        An EC2 inventory reporter, and the same reads behind an LLM tool-use loop.
+        The read-only contract is enforced by a <b>Python allowlist on botocore's
+        request hook</b> — not by a sentence in the system prompt. A model talked
+        into calling <code>TerminateInstances</code> still cannot: the call never
+        leaves the process.
+      </p>
+      <div class="stat">
+        <div><b>36</b><span>TESTS</span></div>
+        <div><b>14</b><span>GO RED WITHOUT THE GUARD</span></div>
+        <div><b>0</b><span>CREDENTIALS TO RUN THEM</span></div>
+      </div>
+      <div class="ev">Paginates describe_instances, describe_security_groups and describe_volumes — and correctly does not paginate describe_regions or get_metric_statistics. Checked against boto3's own can_paginate: exact match.</div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Regulated industries — where most Canadian hiring is</h2>
+    <p>
+      Almost every Canadian posting I read names a compliance regime — FedRAMP and
+      NIST in defence, HIPAA and ISO in health, OSFI in finance. The common problem
+      underneath them is the same: <b>prove the control exists, and prove it is
+      enforced rather than documented.</b>
+    </p>
+    <p>
+      Data residency is the version of that problem I have solved. It is a legal
+      question before it is an architectural one, and most reference architectures
+      are written for somewhere else — so I enforce it in policy rather than in a
+      convention people are asked to remember.
+    </p>
+    <div class="stat" style="margin-bottom:6px">
+      <div><b>2</b><span>CLOUDS COVERED</span></div>
+      <div><b>4</b><span>REGULATIONS MAPPED</span></div>
+      <div><b>Deny</b><span>NOT A WARNING</span></div>
+    </div>
+    <div class="ev">A Service Control Policy that <b>denies any region outside ca-central-1 and ca-west-1</b> — organisation-wide, and an administrator in a member account cannot exceed it.</div>
+    <div class="ev">A custom Rego policy blocking non-Canadian regions across <b>both AWS and Azure</b>, because the two name their Canadian regions differently and a scanner shipped for one misses the other.</div>
+    <div class="ev">The reasoning written up against <b>PIPEDA</b>, <b>British Columbia FIPPA</b>, Nova Scotia's public-sector law, and <b>OSFI B-13</b> for federally regulated financial institutions.</div>
+    <p class="muted" style="margin-top:16px">
+      <b>Sectors this maps to:</b> financial services · healthcare · government and
+      public sector · energy. Control mappings written for <b>SOC 2</b> and
+      <b>PCI DSS</b> as well, in
+      <a href="https://github.com/sadvi11/nokia-5g-to-aws-migration">nokia-5g-to-aws-migration</a>.
+      <a href="https://github.com/sadvi11/aws-multi-account-governance">aws-multi-account-governance</a> ·
+      <a href="https://github.com/sadvi11/iac-security-guardrails">iac-security-guardrails</a>
+    </p>
+  </section>
+
+  <section>
+    <h2>The bugs I found in my own work</h2>
+    <p class="muted" style="margin-bottom:20px">
+      Harder to fake than a green badge, and the reason I trust the rest of it.
+    </p>
+    <div class="bugs">
+      <div class="bug">
+        <p class="what">A policy that matched nothing, while the suite stayed green.</p>
+        <p class="learn">Terraform emits <code>"tags": null</code>, and <code>not r.values.tags</code> is false for null. I fixed the rule, then restructured the tests so one dead policy cannot hide behind its neighbours.</p>
+      </div>
+      <div class="bug">
+        <p class="what">A green CI badge over a red test suite.</p>
+        <p class="learn"><code>continue-on-error: true</code>, with a comment claiming credentials were needed. Eleven of twelve passed offline.</p>
+      </div>
+      <div class="bug">
+        <p class="what">A deployed model scoring 2/6 on real inputs at ~0.52 confidence.</p>
+        <p class="learn">Cross-validation had said 0.471 — worse than random. It now abstains when the input is outside its vocabulary instead of guessing.</p>
+      </div>
+      <div class="bug">
+        <p class="what">A Lambda parsing Kinesis records on an SQS pipeline.</p>
+        <p class="learn">It also swallowed failures and returned success — which, on an SQS trigger, deletes the message instead of retrying it. Nothing tested that handler. The untested function was the broken one.</p>
+      </div>
+      <div class="bug">
+        <p class="what">A prompt-injection hole in my own MCP server, two hours after publishing it.</p>
+        <p class="learn">The first test I wrote for it asserted the wrong property — that the hostile words disappeared. They belong to a real resource name; deleting them would misreport the plan. Only the forged <em>structure</em> had to go.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Why the background is different</h2>
+    <p>
+      Most cloud engineers learn high availability from a course. I learned it on
+      call, on a telecom core network, where the failure mode is not a red build —
+      it is someone's call dropping mid-sentence.
+    </p>
+
+    <div class="role">
+      <p class="when">Dec 2022 – Jul 2025 · Nokia, Delhi</p>
+      <h3>Solution Engineer, Cloud Core Network</h3>
+      <p class="muted">
+        5G core network functions — AMF, SMF, UPF, NRF — as containerised
+        workloads on Kubernetes and OpenStack, in carrier production against a
+        <b>99.9% SLA</b>, for <b>Bell Canada, T-Mobile US and Orange</b>.
+        Delivered a wave-based multi-site 4G→5G migration with zero subscriber
+        downtime. Production on-call with structured root cause analysis.
+      </p>
+    </div>
+    <div class="role">
+      <p class="when">Oct 2025 – present · Meta, via Influence Marketing · Calgary</p>
+      <h3>AI Hardware &amp; Technology Specialist</h3>
+      <p class="muted">
+        Technical enablement on Meta AI products and XR hardware. Built and
+        delivered training for 50+ retail staff. <b>The infrastructure work above
+        is built outside working hours.</b>
+      </p>
+    </div>
+    <div class="role">
+      <p class="when">Education &amp; certification</p>
+      <h3>M.Tech, Electronics &amp; Communication — University of Delhi</h3>
+      <p class="muted">
+        Full merit scholarship. B.Tech, Shri Mata Vaishno Devi University.
+        Microsoft Azure Fundamentals (AZ-900). AWS Solutions Architect Associate —
+        studying, sitting September 2026.
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Everything else, sorted by what you are hiring for</h2>
+    <div class="grid">
+      <div>
+        <h4>Kubernetes &amp; containers</h4>
+        <ul>
+          <li><a href="https://github.com/sadvi11/gitops-argocd-kubernetes">gitops-argocd-kubernetes</a> — CI breaks production on purpose and fails unless Argo CD heals it</li>
+          <li><a href="https://github.com/sadvi11/mlops-sentiment-eks">mlops-sentiment-eks</a> — HPA on Prometheus metrics; CI gates the build on model accuracy</li>
+          <li><a href="https://github.com/sadvi11/flask-ecs-fargate-cicd">flask-ecs-fargate-cicd</a> — Fargate, SHA-tagged images, OIDC, no stored keys</li>
+        </ul>
+      </div>
+      <div>
+        <h4>Infrastructure as code</h4>
+        <ul>
+          <li><a href="https://github.com/sadvi11/aws-multi-account-governance">aws-multi-account-governance</a> — 6 SCPs, permission boundaries, 44 tests</li>
+          <li><a href="https://github.com/sadvi11/aws-hybrid-network-terraform">aws-hybrid-network-terraform</a> — Transit Gateway, 12 assertions, mostly negatives</li>
+          <li><a href="https://github.com/sadvi11/multi-cloud-terraform">multi-cloud-terraform</a> — one codebase, two clouds, and where they diverge</li>
+        </ul>
+      </div>
+      <div>
+        <h4>Security &amp; governance</h4>
+        <ul>
+          <li><a href="https://github.com/sadvi11/iac-security-guardrails">iac-security-guardrails</a> — Checkov plus custom Rego, tested in both directions</li>
+          <li><a href="https://github.com/sadvi11/aws-cloudformation-stacksets">aws-cloudformation-stacksets</a> — org-wide baseline, 17 assertions both ways</li>
+          <li><a href="https://github.com/sadvi11/azure-finops-guardrails">azure-finops-guardrails</a> — seven detectors, pure functions, no cloud access</li>
+        </ul>
+      </div>
+      <div>
+        <h4>AI engineering</h4>
+        <ul>
+          <li><a href="https://github.com/sadvi11/bedrock-rag-app">bedrock-rag-app</a> — Titan V2 embeddings, pgvector, grounded so it reports missing context</li>
+          <li><a href="https://github.com/sadvi11/smart-ai-agent">smart-ai-agent</a> — tool use and memory, graded against prompt-injection attacks</li>
+          <li><a href="https://github.com/sadvi11/structured-test-agent">structured-test-agent</a> — forced tool choice against a strict JSON Schema</li>
+        </ul>
+      </div>
+      <div>
+        <h4>Observability &amp; SRE</h4>
+        <ul>
+          <li><a href="https://github.com/sadvi11/sre-incident-practice">sre-incident-practice</a> — real postmortems, an error-budget policy, open items left open</li>
+          <li><a href="https://github.com/sadvi11/prometheus-monitoring-stack">prometheus-monitoring-stack</a> — pull model, deliberately isolated from what it watches</li>
+        </ul>
+      </div>
+      <div>
+        <h4>Open source</h4>
+        <ul>
+          <li><a href="https://github.com/aquasecurity/trivy-checks/pull/602">aquasecurity/trivy-checks #602</a> — an open pull request allowing TLS 1.3 in a policy that rejected it. Submitted, awaiting review</li>
+        </ul>
+      </div>
+    </div>
+    <div class="ev">Three services running live right now — all returning HTTP 200 when this page was built.</div>
+    <div class="ev warn">Nothing here claims to be production at scale. Where a repository was never deployed, its README says so.</div>
+  </section>
+
+  <footer>
+    <h2>Get in touch</h2>
+    <p class="big">
+      I am looking for cloud, DevOps, platform or AI engineering work where
+      infrastructure is treated as a product.
+    </p>
+    <p class="links">
+      <a href="mailto:sadhvisharma763@gmail.com">sadhvisharma763@gmail.com</a>
+      <a href="https://www.linkedin.com/in/sadhvi-sharma-5789a6249">LinkedIn</a>
+      <a href="https://github.com/sadvi11">GitHub</a>
+    </p>
+    <p class="muted" style="margin-top:22px; font-family:var(--f-mono); font-size:12px">
+      Permanent Resident · no sponsorship required · available immediately
+    </p>
+  </footer>
+
+</div>
+
+</body>
+</html>
