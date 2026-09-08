@@ -16,121 +16,93 @@
 
 <span class="tag">Things I got wrong</span>
 <h1>The chunk that inherited the wrong heading</h1>
-<p class="lede">A short section fell below my minimum chunk size, merged
-backwards into the section before it, and took that section's heading with it.
-It then embedded under the wrong topic and became unreachable by anyone asking
-about it. Nothing errored.</p>
+<p class="lede">A short section fell below my minimum chunk size, merged backwards into the section before it, and took that section's heading with it. It then embedded under the wrong topic and became unreachable by anyone asking about it. Nothing errored.</p>
 <p class="meta">Sadhvi Sharma · Calgary</p>
 
 <h2>Why chunking is the ceiling</h2>
-
 <p>Retrieval cannot return a passage that chunking never produced. Whatever you
 do downstream — hybrid search, fusion, a cross-encoder reranker — is bounded by
 whether the right span of text exists as a unit in the index.</p>
-
 <p>The default is to split every N characters. It is a photocopier with the
 guillotine set to a fixed width: some pages come out cut mid-sentence, the
 fragment makes no sense on its own, and — this is the part that matters — it
 still looks like a complete page.</p>
-
 <p>A chunk that starts with half a clause and ends with half another gets
 embedded as a unit. The resulting vector is a blend of two incomplete thoughts
 and matches neither well.</p>
-
 <h2>So I split on structure</h2>
-
 <p>Headings and paragraphs are authored boundaries. Somebody already decided
 those ideas belong together, and that decision is free information.</p>
-
 <p>Three rules:</p>
-
 <ul>
 <li><strong>Structure before size.</strong> Sections first, then pack paragraphs
 up to a target length.</li>
 <li><strong>Overlap by whole sentences, not characters.</strong> A sentence near
 a boundary belongs to both neighbours; overlapping by character count
 reintroduces exactly the mid-sentence cut you are trying to avoid.</li>
-<li><strong>Carry the heading into the chunk.</strong> "Within 30 days" is
-useless without "Refunds", and nothing scrolls up inside a vector index.</li>
+<li><strong>Carry the heading into the chunk.</strong> &ldquo;Within 30 days&rdquo; is
+useless without &ldquo;Refunds&rdquo;, and nothing scrolls up inside a vector index.</li>
 </ul>
-
 <h2>The bug</h2>
-
 <p>I also had a minimum size, because a thirty-character fragment embeds to
 noise and pollutes retrieval for everything else. Fragments below it get merged
 backwards into the previous chunk.</p>
-
 <p>Which is correct — <em>within a section</em>. My implementation did not check
 that:</p>
-
 <pre><code>too_small = len(piece) &lt; MIN_CHARS
-can_merge = len(chunks) &gt; 0          # &lt;- the bug</code></pre>
-
+can_merge = len(chunks) &gt; 0          # &lt;- the bug
+</code></pre>
 <p>Given a document like this:</p>
-
 <pre><code># Refunds
 
 Refunds are processed within 30 days of receiving the returned item...
 
 # Returns
 
-To return an item, use the returns portal and print the prepaid label.</code></pre>
-
+To return an item, use the returns portal and print the prepaid label.
+</code></pre>
 <p>The Returns section is 117 characters. Below the minimum. So it merged
 backwards into the Refunds chunk — <strong>and inherited the heading
-"Refunds"</strong>.</p>
-
+&ldquo;Refunds&rdquo;</strong>.</p>
 <p>The text about the returns portal was now embedded under a refunds heading.
-Anyone asking "how do I return an item" would not find it, and anyone asking
+Anyone asking &ldquo;how do I return an item&rdquo; would not find it, and anyone asking
 about refunds would get a passage half about something else.</p>
-
 <h2>The fix is one line</h2>
-
 <pre><code>section_start = len(chunks)          # per section
 ...
-can_merge = len(chunks) &gt; section_start</code></pre>
-
+can_merge = len(chunks) &gt; section_start
+</code></pre>
 <p>Merge backwards only into a chunk from the same section. A short section is
 still a section.</p>
-
 <p>And the test that catches it asserts the negative, which is the one that
 silently stops being true:</p>
-
 <pre><code>headings = {c.heading for c in chunks}
-assert "Returns" in headings, "the Returns section was absorbed"</code></pre>
-
+assert &quot;Returns&quot; in headings, &quot;the Returns section was absorbed&quot;
+</code></pre>
 <h2>The test that was not testing anything</h2>
-
 <p>There is a second lesson here, and it is the one I did not expect.</p>
-
 <p>I also had a test for the heading being carried into the chunk:</p>
-
-<pre><code>assert chunk.embedding_text.startswith("Refunds")</code></pre>
-
+<pre><code>assert chunk.embedding_text.startswith(&quot;Refunds&quot;)
+</code></pre>
 <p>My fixture was a Refunds section whose body <em>already began</em> with the
-word "Refunds". So that assertion was true whether or not the heading was
+word &ldquo;Refunds&rdquo;. So that assertion was true whether or not the heading was
 prepended at all. I could have deleted the feature entirely and the test would
 still have passed.</p>
-
 <p>I only found that by
 <a href="tests-that-were-lying.html">deliberately breaking the code and checking
 whether anything went red</a>. The fixture now starts the body with a different
 word.</p>
-
 <h2>What makes this class of bug hard</h2>
-
 <p>A bad photocopy is <em>visibly</em> bad. A bad chunk is not. It embeds fine,
 it retrieves sometimes, it produces plausible answers to adjacent questions,
 and it lowers quality quietly with nothing in any log.</p>
-
 <p>Retrieval systems fail in this shape constantly. There is no exception, no
 alert, no red build — just answers that are slightly worse than they should be,
 in a way that only shows up if you go looking.</p>
 
 <footer>
-  <p>Implementation:
-  <a href="https://github.com/sadvi11/amazon-connect-rag-agent">amazon-connect-rag-agent</a>
-  — <code>src/chunking.py</code>.</p>
+  <p>Implementation: <a href="https://github.com/sadvi11/amazon-connect-rag-agent">amazon-connect-rag-agent</a> — <code>src/chunking.py</code>.</p>
+
   <p><a href="/learn/">← more notes</a></p>
 </footer>
 
