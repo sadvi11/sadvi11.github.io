@@ -1,37 +1,44 @@
 ---
 title: The thing I am writing about
-lede: One or two sentences. This shows on the index card and under the title. Say what happened, not what the article covers.
-tag: Things I got wrong
-description: Optional. Defaults to the lede. Used for search results and link previews.
-footer: Optional. A closing line, usually a link to the repo. Markdown is fine.
+lede: One or two sentences. Shows on the index card and under the title. Say what happened, not what the note covers.
+topic: Retrieval
+level: basic
+tags: rag, embeddings
+prereq: what-is-an-embedding
+related: why-hybrid-search
+description: Optional. Defaults to the lede.
+footer: Optional. Usually a link to the repo. Markdown fine.
 ---
 
-Open with the concrete thing. Not "in this post I will explain" — start with
-the situation.
+Open with the concrete thing. Not "in this note I will explain" - start with
+the situation, the number, or the bug.
 
-## Use h2 for sections
+## Sections are h2
 
-Ordinary markdown works: **bold**, `code`, [links](https://example.com), lists,
-tables, and fenced code blocks.
+They become the contents box automatically once there are three or more, and
+each gets an anchor so you can link someone straight to the paragraph that
+answers them.
 
-```python
-def example():
-    return "fenced blocks are fine"
-```
+Ordinary markdown: **bold**, `code`, [links](https://example.com), lists,
+tables, fenced blocks, blockquotes.
 
-> Blockquotes render as pull quotes.
+## Front matter that matters
 
-## Tags that already have a section
+**topic** - groups it on the index. Existing: `Foundations`, `Retrieval`,
+`Agents`, `Engineering`, `Production`, `Things I got wrong`. A new one gets its
+own section at the bottom.
 
-- `Things I got wrong`
-- `Retrieval`
-- `Agents`
-- `Production`
+**level** - `basic`, `intermediate` or `advanced`. Index sorts basic first
+within each topic, so the page reads as a path rather than a pile.
 
-Any other tag gets its own section at the bottom of the index.
+**prereq** - slugs to read first. Renders as a banner at the top. The build
+**fails** if a slug does not exist, because a dead "read first" link is worse
+than none.
+
+**related** - slugs, rendered at the bottom.
 
 ## Before publishing
 
 - Does it open with something concrete rather than a preamble?
-- Is there at least one number, file name, or piece of real output?
-- Would this be useful if someone else wrote it?
+- Is there a number, a filename, or real output somewhere in it?
+- Would this be useful if somebody else had written it?

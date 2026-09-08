@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What an embedding actually is — Notes — Sadhvi Sharma</title>
+<meta name="description" content="A vector where distance means similarity. The useful part is knowing what that buys you and, more importantly, what it cannot do.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+
+<header class="site">
+  <nav><a href="/">Portfolio</a><a href="/learn/">Notes</a><a href="https://github.com/sadvi11">GitHub</a></nav>
+</header>
+
+<p class="crumb"><a href="/learn/">Notes</a> / Foundations</p>
+<h1>What an embedding actually is</h1>
+<p class="lede">A vector where distance means similarity. The useful part is knowing what that buys you and, more importantly, what it cannot do.</p>
+<p class="meta"><span class="lvl lvl-basic">basic</span><span class="tg">#embeddings</span><span class="tg">#rag</span><span class="tg">#vectors</span></p>
+
+<nav class="toc">
+  <p>On this page</p>
+  <ol>
+    <li><a href="#where-the-analogy-stops">Where the analogy stops</a></li>
+    <li><a href="#dimensionality-is-a-decision-not-a-property">Dimensionality is a decision, not a property</a></li>
+    <li><a href="#the-thing-that-will-bite-you">The thing that will bite you</a></li>
+    <li><a href="#what-they-are-bad-at">What they are bad at</a></li>
+    <li><a href="#what-i-measured">What I measured</a></li>
+  </ol>
+</nav>
+
+<p>In a supermarket, coriander sits near parsley. Not because the words look
+alike, but because they get used the same way — someone looking for one will
+find the other useful. The shelf position encodes meaning.</p>
+<p>An embedding is that idea with numbers. Text goes in, a list of floats comes
+out, and the distance between two lists approximates how related the two pieces
+of text are. &ldquo;How long for a refund&rdquo; lands near &ldquo;when do I get my money back&rdquo;
+without sharing a single content word.</p>
+<h2 id="where-the-analogy-stops">Where the analogy stops<a class="anchor" href="#where-the-analogy-stops">#</a></h2>
+<p>A supermarket has one aisle per idea, and a person chose where things go.</p>
+<p>Embedding space has hundreds of dimensions and no human-readable axes — you
+cannot point at &ldquo;the refund direction&rdquo;. And nobody chose the positions; they
+were <strong>learned from data</strong>, which means they inherit whatever that data
+believed.</p>
+<h2 id="dimensionality-is-a-decision-not-a-property">Dimensionality is a decision, not a property<a class="anchor" href="#dimensionality-is-a-decision-not-a-property">#</a></h2>
+<p>I assumed for a long time that a model&rsquo;s vector size was fixed. It often is
+not. Amazon&rsquo;s Titan Text Embeddings V2 takes an optional <code>dimensions</code>
+parameter accepting <strong>1024 (the default), 512, or 256</strong>
+(<a href="https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters-titan-embed-text.html">AWS docs</a>).</p>
+<p>So you are trading recall against storage and comparison time explicitly.
+Every dimension is bytes on disk and work at query time.</p>
+<h2 id="the-thing-that-will-bite-you">The thing that will bite you<a class="anchor" href="#the-thing-that-will-bite-you">#</a></h2>
+<p><strong>Embeddings are model-specific.</strong> Change the model and the entire corpus has
+to be re-embedded.</p>
+<p>If you do not, old and new vectors sit in incompatible spaces. Nothing errors.
+Nothing warns you. Search quality just degrades, and it degrades in a way that
+looks like &ldquo;the model got worse&rdquo; rather than &ldquo;the index is now meaningless&rdquo;.</p>
+<h2 id="what-they-are-bad-at">What they are bad at<a class="anchor" href="#what-they-are-bad-at">#</a></h2>
+<p>They generalise. That is the whole point, and it is precisely wrong for
+identifiers.</p>
+<p>Order numbers, policy codes, SKUs, the literal string <code>RTN-14</code> — an embedding
+maps those to whatever happens to sit near them, which is not the same as
+matching them. A vector search will return its nearest neighbour with no
+signal that the match is a stretch.</p>
+<p>That single limitation is why <a href="why-hybrid-search.html">hybrid search</a> exists.</p>
+<h2 id="what-i-measured">What I measured<a class="anchor" href="#what-i-measured">#</a></h2>
+<p>In <code>bedrock-rag-app</code>, embedding is the cheapest stage of the pipeline —
+<strong>195 ms average</strong>, against 1.53 s for generation. If you are optimising
+latency, this is not where the time is going.</p>
+<h2 id="related">Related</h2>
+<ul>
+  <li><a href="why-hybrid-search.html">Why hybrid search, and how rank fusion actually works</a></li>
+  <li><a href="chunking-sets-the-ceiling.html">Chunking sets the ceiling on everything downstream</a></li>
+</ul>
+
+<footer>
+  <p>Measured in <a href="https://github.com/sadvi11/bedrock-rag-app">bedrock-rag-app</a>.</p>
+
+  <p><a href="/learn/">← all notes</a></p>
+</footer>
+
+</div>
+</body>
+</html>

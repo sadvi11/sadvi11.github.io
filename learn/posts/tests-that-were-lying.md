@@ -1,7 +1,10 @@
 ---
 title: The tests that were lying to me
 lede: I had ninety-one passing tests and I felt safe. Three of them were protecting nothing at all, and the only way I found out was by breaking my own code on purpose.
-tag: Things I got wrong
+topic: Things I got wrong
+level: intermediate
+tags: testing, mutation-testing, rag
+related: the-chunk-that-inherited-the-wrong-heading, a-comment-that-described-code-i-had-not-written
 description: Ninety-one passing tests, and three of them asserted nothing at all. How deliberately breaking my own code found them.
 footer: The fault injection script and the tests are public: [amazon-connect-rag-agent](https://github.com/sadvi11/amazon-connect-rag-agent).
 ---

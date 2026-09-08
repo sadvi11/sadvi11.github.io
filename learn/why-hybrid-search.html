@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Why hybrid search, and how rank fusion actually works — Sadhvi Sharma</title>
+<title>Why hybrid search, and how rank fusion actually works — Notes — Sadhvi Sharma</title>
 <meta name="description" content="Dense search cannot find RTN-14. Keyword search cannot find a paraphrase. Combining them needs rank, not score — worked through with real numbers.">
 <link rel="stylesheet" href="style.css">
 </head>
@@ -14,12 +14,25 @@
   <nav><a href="/">Portfolio</a><a href="/learn/">Notes</a><a href="https://github.com/sadvi11">GitHub</a></nav>
 </header>
 
-<span class="tag">Retrieval</span>
+<p class="crumb"><a href="/learn/">Notes</a> / Retrieval</p>
 <h1>Why hybrid search, and how rank fusion actually works</h1>
 <p class="lede">A good embedding model cannot reliably find RTN-14. Keyword search cannot find a paraphrase. The interesting part is not running both — it is that you cannot add their scores together, and what you do instead.</p>
-<p class="meta">Sadhvi Sharma · Calgary</p>
+<p class="meta"><span class="lvl lvl-intermediate">intermediate</span><span class="tg">#rag</span><span class="tg">#retrieval</span><span class="tg">#ranking</span><span class="tg">#bm25</span></p>
+<p class="prereq"><b>Read first:</b> <a href="what-is-an-embedding.html">What an embedding actually is</a>, <a href="chunking-sets-the-ceiling.html">Chunking sets the ceiling on everything downstream</a></p>
 
-<h2>Where dense search fails</h2>
+<nav class="toc">
+  <p>On this page</p>
+  <ol>
+    <li><a href="#where-dense-search-fails">Where dense search fails</a></li>
+    <li><a href="#the-problem-with-combining-them">The problem with combining them</a></li>
+    <li><a href="#reciprocal-rank-fusion">Reciprocal rank fusion</a></li>
+    <li><a href="#on-the-value-of-k">On the value of k</a></li>
+    <li><a href="#then-rerank">Then rerank</a></li>
+    <li><a href="#what-mine-does-not-do">What mine does not do</a></li>
+  </ol>
+</nav>
+
+<h2 id="where-dense-search-fails">Where dense search fails<a class="anchor" href="#where-dense-search-fails">#</a></h2>
 <p>Ask a helpful shop assistant for &ldquo;that blue jacket from the advert&rdquo; and they
 will find it. Ask for &ldquo;SKU 4471-B&rdquo; and the <em>helpful</em> one guesses at
 something similar. You wanted the till system, which either matches the code
@@ -33,7 +46,7 @@ returns its nearest neighbour with no signal that the match is a stretch.</p>
 <p>Keyword search has the opposite failure: it cannot see that &ldquo;how long for a
 refund&rdquo; and &ldquo;when do I get my money back&rdquo; are the same question. Which is how
 customers actually write.</p>
-<h2>The problem with combining them</h2>
+<h2 id="the-problem-with-combining-them">The problem with combining them<a class="anchor" href="#the-problem-with-combining-them">#</a></h2>
 <p>So run both. Now you have two ranked lists and you need one.</p>
 <p>The obvious move is to add the scores. It does not work, because cosine
 similarity and BM25 relevance are not on the same scale and there is no honest
@@ -43,7 +56,7 @@ a distribution neither list has.</p>
 <p>Two friends each rank ten restaurants. One scores out of ten, the other out
 of a hundred, one is generous and one is harsh. Adding their numbers is
 meaningless. But you can still use the <em>order</em>.</p>
-<h2>Reciprocal rank fusion</h2>
+<h2 id="reciprocal-rank-fusion">Reciprocal rank fusion<a class="anchor" href="#reciprocal-rank-fusion">#</a></h2>
 <pre><code>RRFscore(d) = Σ  1 / (k + rank(d))
 </code></pre>
 <p>Position only. No scores at all, so there is nothing to normalise. A passage
@@ -67,7 +80,7 @@ the argument for hybrid search.</p>
 <p>Notice how close the individual contributions are: 0.0164, 0.0161, 0.0159.
 With k = 60 the gap between rank 1 and rank 3 is tiny, so being present in two
 lists matters far more than topping one. That is the behaviour k controls.</p>
-<h2>On the value of k</h2>
+<h2 id="on-the-value-of-k">On the value of k<a class="anchor" href="#on-the-value-of-k">#</a></h2>
 <p>k = 60 comes from the original paper — Cormack, Clarke and Büttcher,
 <em>Reciprocal Rank Fusion Outperforms Condorcet and Individual Rank Learning
 Methods</em>, SIGIR 2009. Their wording:</p>
@@ -83,7 +96,7 @@ thing. Mathematically that damping is a real property of the formula. It is
 just not why they chose the number.</p>
 <p><a href="https://cormack.uwaterloo.ca/cormacksigir09-rrf.pdf">The paper is two pages.</a>
 It is worth the ten minutes.</p>
-<h2>Then rerank</h2>
+<h2 id="then-rerank">Then rerank<a class="anchor" href="#then-rerank">#</a></h2>
 <p>Fusion gives you a shortlist, not an answer. Retrieval optimises
 <strong>recall</strong> — is the right passage in the top twenty at all.
 Reranking optimises <strong>precision</strong> — is it first.</p>
@@ -96,7 +109,7 @@ sees the pair together. A cross-encoder scores the pair jointly, which is
 <a href="https://github.com/UKPLab/sentence-transformers/blob/master/docs/cross_encoder/usage/usage.rst">&ldquo;generally superior&rdquo;
 and &ldquo;often slower&rdquo;</a>, and far too slow to run over a whole corpus. Hence two
 stages.</p>
-<h2>What mine does not do</h2>
+<h2 id="what-mine-does-not-do">What mine does not do<a class="anchor" href="#what-mine-does-not-do">#</a></h2>
 <p>My reranker scores term overlap, not a cross-encoder. That measures
 vocabulary, not meaning, and it has a failure I keep as a deliberately failing
 test rather than deleting from the eval set: the question <em>&ldquo;what policy
@@ -104,11 +117,15 @@ covers salary disputes&rdquo;</em> scores at the threshold because the word &ldq
 matches, even though the corpus says nothing about salaries.</p>
 <p>The fix is a cross-encoder behind the same interface — not a higher
 threshold, which would start refusing real questions.</p>
+<h2 id="related">Related</h2>
+<ul>
+  <li><a href="the-chunk-that-inherited-the-wrong-heading.html">The chunk that inherited the wrong heading</a></li>
+</ul>
 
 <footer>
   <p>Implementation: <a href="https://github.com/sadvi11/amazon-connect-rag-agent">amazon-connect-rag-agent</a> — <code>src/rag.py</code>.</p>
 
-  <p><a href="/learn/">← more notes</a></p>
+  <p><a href="/learn/">← all notes</a></p>
 </footer>
 
 </div>

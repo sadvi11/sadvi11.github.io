@@ -1,7 +1,11 @@
 ---
 title: Why hybrid search, and how rank fusion actually works
 lede: A good embedding model cannot reliably find RTN-14. Keyword search cannot find a paraphrase. The interesting part is not running both — it is that you cannot add their scores together, and what you do instead.
-tag: Retrieval
+topic: Retrieval
+level: intermediate
+tags: rag, retrieval, ranking, bm25
+prereq: what-is-an-embedding, chunking-sets-the-ceiling
+related: the-chunk-that-inherited-the-wrong-heading
 description: Dense search cannot find RTN-14. Keyword search cannot find a paraphrase. Combining them needs rank, not score — worked through with real numbers.
 footer: Implementation: [amazon-connect-rag-agent](https://github.com/sadvi11/amazon-connect-rag-agent) — `src/rag.py`.
 ---

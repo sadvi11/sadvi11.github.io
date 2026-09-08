@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>A comment that described code I had not written — Sadhvi Sharma</title>
+<title>A comment that described code I had not written — Notes — Sadhvi Sharma</title>
 <meta name="description" content="My docstring said the blocking call went to a thread pool. It did not. Same results, passing tests, no concurrency at all.">
 <link rel="stylesheet" href="style.css">
 </head>
@@ -14,12 +14,23 @@
   <nav><a href="/">Portfolio</a><a href="/learn/">Notes</a><a href="https://github.com/sadvi11">GitHub</a></nav>
 </header>
 
-<span class="tag">Things I got wrong</span>
+<p class="crumb"><a href="/learn/">Notes</a> / Things I got wrong</p>
 <h1>A comment that described code I had not written</h1>
 <p class="lede">The docstring said the blocking call was dispatched to a thread so it would not hold the event loop. It was not. The results were identical, the tests passed, and the concurrency simply never happened.</p>
-<p class="meta">Sadhvi Sharma · Calgary</p>
+<p class="meta"><span class="lvl lvl-intermediate">intermediate</span><span class="tg">#async</span><span class="tg">#python</span><span class="tg">#concurrency</span></p>
 
-<h2>The setup</h2>
+<nav class="toc">
+  <p>On this page</p>
+  <ol>
+    <li><a href="#the-setup">The setup</a></li>
+    <li><a href="#what-was-actually-happening">What was actually happening</a></li>
+    <li><a href="#why-no-test-caught-it">Why no test caught it</a></li>
+    <li><a href="#the-fix-and-the-test-that-can-see-it">The fix, and the test that can see it</a></li>
+    <li><a href="#what-i-took-from-it">What I took from it</a></li>
+  </ol>
+</nav>
+
+<h2 id="the-setup">The setup<a class="anchor" href="#the-setup">#</a></h2>
 <p>A retrieval pipeline runs two searches — a dense vector search and a keyword
 search. They hit different systems and neither depends on the other, so they
 should run at the same time. The cost is then the slower of the two rather than
@@ -39,7 +50,7 @@ psycopg client — or already async. Here is what I wrote:</p>
     return result
 </code></pre>
 <p>Read the comment. Then read the last line.</p>
-<h2>What was actually happening</h2>
+<h2 id="what-was-actually-happening">What was actually happening<a class="anchor" href="#what-was-actually-happening">#</a></h2>
 <p>Nothing goes to a thread. <code>fn(*args, **kwargs)</code> is called
 <em>inline</em>, inside a coroutine. A blocking call there holds the event loop
 for its entire duration, so the second search cannot begin until the first has
@@ -53,14 +64,14 @@ write, and then not written it.</p>
 runs in&rdquo;</em>
 (<a href="https://docs.python.org/3/library/asyncio-dev.html#running-blocking-code">asyncio developer notes</a>).
 <code>asyncio.to_thread()</code> is the modern wrapper. I had used neither.</p>
-<h2>Why no test caught it</h2>
+<h2 id="why-no-test-caught-it">Why no test caught it<a class="anchor" href="#why-no-test-caught-it">#</a></h2>
 <p>This is the part worth sitting with. <strong>The results were identical.</strong></p>
 <p>Sequential and concurrent execution return the same passages in the same
 order. Every correctness test passed, because correctness was never affected.
 The only difference was elapsed time, and nothing was measuring elapsed time.</p>
 <p>It is a bug that appears exclusively under load, in production, when
 concurrency is the thing you were counting on.</p>
-<h2>The fix, and the test that can see it</h2>
+<h2 id="the-fix-and-the-test-that-can-see-it">The fix, and the test that can see it<a class="anchor" href="#the-fix-and-the-test-that-can-see-it">#</a></h2>
 <pre><code>async def _maybe_await(fn, *args, **kwargs):
     if inspect.iscoroutinefunction(fn):
         return await fn(*args, **kwargs)
@@ -79,7 +90,7 @@ only thing that can tell the difference:</p>
         f&quot;took {elapsed:.3f}s against {sequential:.3f}s sequential - the &quot;
         f&quot;searches are not overlapping&quot;)
 </code></pre>
-<h2>What I took from it</h2>
+<h2 id="what-i-took-from-it">What I took from it<a class="anchor" href="#what-i-took-from-it">#</a></h2>
 <p>Two things.</p>
 <p><strong>A comment is not evidence about behaviour.</strong> It is evidence
 about intent, and intent and behaviour drift silently. I now read comments as a
@@ -88,11 +99,15 @@ question — <em>does it actually do this?</em> — rather than as documentation
 Concurrency, cost, and latency are not about whether the output is right. If
 the only thing you assert is the result, you cannot see them — and they will
 be perfectly fine right up until traffic arrives.</p>
+<h2 id="related">Related</h2>
+<ul>
+  <li><a href="tests-that-were-lying.html">The tests that were lying to me</a></li>
+</ul>
 
 <footer>
   <p>Code and test: <a href="https://github.com/sadvi11/amazon-connect-rag-agent">amazon-connect-rag-agent</a>.</p>
 
-  <p><a href="/learn/">← more notes</a></p>
+  <p><a href="/learn/">← all notes</a></p>
 </footer>
 
 </div>

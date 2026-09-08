@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RAG or fine-tuning — they answer different questions — Notes — Sadhvi Sharma</title>
+<meta name="description" content="One changes what the model knows. The other changes how it behaves. Choosing between them is usually a category error.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+
+<header class="site">
+  <nav><a href="/">Portfolio</a><a href="/learn/">Notes</a><a href="https://github.com/sadvi11">GitHub</a></nav>
+</header>
+
+<p class="crumb"><a href="/learn/">Notes</a> / Foundations</p>
+<h1>RAG or fine-tuning — they answer different questions</h1>
+<p class="lede">One changes what the model knows. The other changes how it behaves. Choosing between them is usually a category error.</p>
+<p class="meta"><span class="lvl lvl-basic">basic</span><span class="tg">#rag</span><span class="tg">#fine-tuning</span><span class="tg">#architecture</span></p>
+
+<nav class="toc">
+  <p>On this page</p>
+  <ol>
+    <li><a href="#the-practical-test">The practical test</a></li>
+    <li><a href="#the-reason-i-care-more-about">The reason I care more about</a></li>
+    <li><a href="#when-fine-tuning-is-genuinely-right">When fine-tuning is genuinely right</a></li>
+    <li><a href="#the-failure-mode-people-hit">The failure mode people hit</a></li>
+  </ol>
+</nav>
+
+<p>The question is usually posed as a choice. It is not really one, because the
+two things do different jobs.</p>
+<p><strong>Retrieval changes what the model knows.</strong> Put relevant text in the prompt and
+the model answers from your data instead of its training.</p>
+<p><strong>Fine-tuning changes how the model behaves.</strong> Tone, output format, the shape
+of its reasoning.</p>
+<h2 id="the-practical-test">The practical test<a class="anchor" href="#the-practical-test">#</a></h2>
+<p>If the refund policy changes on Tuesday, what has to happen?</p>
+<p>With retrieval: you update a document. With fine-tuning: you assemble training
+data, run a job, evaluate it, and have a rollback story ready.</p>
+<p>For facts that change, that is the whole argument.</p>
+<h2 id="the-reason-i-care-more-about">The reason I care more about<a class="anchor" href="#the-reason-i-care-more-about">#</a></h2>
+<p>Retrieval is <strong>auditable</strong>. Every answer in my pipeline returns the passages
+that produced it, with their scores. When a customer disputes an answer, I can
+show which chunk caused it.</p>
+<p>A fine-tuned model cannot tell you why it said something. For anything touching
+money, policy, or a regulated domain, that traceability is not a nice-to-have.</p>
+<h2 id="when-fine-tuning-is-genuinely-right">When fine-tuning is genuinely right<a class="anchor" href="#when-fine-tuning-is-genuinely-right">#</a></h2>
+<ul>
+<li><strong>Consistent output format</strong> — when schema validation keeps failing and you
+  are tired of repairing responses</li>
+<li><strong>Domain tone</strong> — a voice that a prompt keeps drifting away from</li>
+<li><strong>Cost</strong> — when a small fine-tuned model beats a large prompted one at the
+  same quality, which is a real and underrated reason</li>
+</ul>
+<p>They also compose. Fine-tune for format and tone, retrieve for facts.</p>
+<h2 id="the-failure-mode-people-hit">The failure mode people hit<a class="anchor" href="#the-failure-mode-people-hit">#</a></h2>
+<p>Reaching for fine-tuning because retrieval quality is poor.</p>
+<p>If the right passage is not being retrieved, fine-tuning does not fix it — you
+have taught the model to sound more confident about the same missing
+information. The fix is upstream:
+<a href="chunking-sets-the-ceiling.html">chunking</a>, then
+<a href="why-hybrid-search.html">hybrid retrieval</a>, then reranking.</p>
+<p>Fix retrieval before you consider training anything.</p>
+<h2 id="related">Related</h2>
+<ul>
+  <li><a href="what-is-an-embedding.html">What an embedding actually is</a></li>
+  <li><a href="chunking-sets-the-ceiling.html">Chunking sets the ceiling on everything downstream</a></li>
+</ul>
+
+<footer>
+
+  <p><a href="/learn/">← all notes</a></p>
+</footer>
+
+</div>
+</body>
+</html>

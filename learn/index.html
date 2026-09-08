@@ -29,28 +29,53 @@
   bonus rather than the point.</p>
 
   <!-- POSTS -->
+  <h2>Foundations</h2>
+  <p class="topic-blurb">Start here. Everything else assumes these.</p>
+
+  <a class="card" href="rag-versus-fine-tuning.html">
+    <h3>RAG or fine-tuning — they answer different questions</h3>
+    <p>One changes what the model knows. The other changes how it behaves. Choosing between them is usually a category error.</p>
+    <p class="cardmeta"><span class="lvl lvl-basic">basic</span><span class="tg">#rag</span><span class="tg">#fine-tuning</span><span class="tg">#architecture</span></p>
+  </a>
+
+  <a class="card" href="what-is-an-embedding.html">
+    <h3>What an embedding actually is</h3>
+    <p>A vector where distance means similarity. The useful part is knowing what that buys you and, more importantly, what it cannot do.</p>
+    <p class="cardmeta"><span class="lvl lvl-basic">basic</span><span class="tg">#embeddings</span><span class="tg">#rag</span><span class="tg">#vectors</span></p>
+  </a>
+  <h2>Retrieval</h2>
+  <p class="topic-blurb">Chunking, embeddings, search, ranking.</p>
+
+  <a class="card" href="chunking-sets-the-ceiling.html">
+    <h3>Chunking sets the ceiling on everything downstream</h3>
+    <p>Retrieval cannot return a passage that chunking never produced. Whatever you do afterwards is bounded by that.</p>
+    <p class="cardmeta"><span class="lvl lvl-basic">basic</span><span class="tg">#chunking</span><span class="tg">#rag</span><span class="tg">#embeddings</span></p>
+  </a>
+
+  <a class="card" href="why-hybrid-search.html">
+    <h3>Why hybrid search, and how rank fusion actually works</h3>
+    <p>A good embedding model cannot reliably find RTN-14. Keyword search cannot find a paraphrase. The interesting part is not running both — it is that you cannot add their scores together, and what you do instead.</p>
+    <p class="cardmeta"><span class="lvl lvl-intermediate">intermediate</span><span class="tg">#rag</span><span class="tg">#retrieval</span><span class="tg">#ranking</span><span class="tg">#bm25</span></p>
+  </a>
   <h2>Things I got wrong</h2>
-  <p style="color:var(--muted); margin-top:-.4rem;">The most useful notes. Each one is a bug that produced no error message.</p>
+  <p class="topic-blurb">Bugs that produced no error message.</p>
 
   <a class="card" href="a-comment-that-described-code-i-had-not-written.html">
     <h3>A comment that described code I had not written</h3>
     <p>The docstring said the blocking call was dispatched to a thread so it would not hold the event loop. It was not. The results were identical, the tests passed, and the concurrency simply never happened.</p>
-  </a>
-
-  <a class="card" href="tests-that-were-lying.html">
-    <h3>The tests that were lying to me</h3>
-    <p>I had ninety-one passing tests and I felt safe. Three of them were protecting nothing at all, and the only way I found out was by breaking my own code on purpose.</p>
+    <p class="cardmeta"><span class="lvl lvl-intermediate">intermediate</span><span class="tg">#async</span><span class="tg">#python</span><span class="tg">#concurrency</span></p>
   </a>
 
   <a class="card" href="the-chunk-that-inherited-the-wrong-heading.html">
     <h3>The chunk that inherited the wrong heading</h3>
     <p>A short section fell below my minimum chunk size, merged backwards into the section before it, and took that section's heading with it. It then embedded under the wrong topic and became unreachable by anyone asking about it. Nothing errored.</p>
+    <p class="cardmeta"><span class="lvl lvl-intermediate">intermediate</span><span class="tg">#chunking</span><span class="tg">#rag</span><span class="tg">#embeddings</span></p>
   </a>
-  <h2>Retrieval</h2>
 
-  <a class="card" href="why-hybrid-search.html">
-    <h3>Why hybrid search, and how rank fusion actually works</h3>
-    <p>A good embedding model cannot reliably find RTN-14. Keyword search cannot find a paraphrase. The interesting part is not running both — it is that you cannot add their scores together, and what you do instead.</p>
+  <a class="card" href="tests-that-were-lying.html">
+    <h3>The tests that were lying to me</h3>
+    <p>I had ninety-one passing tests and I felt safe. Three of them were protecting nothing at all, and the only way I found out was by breaking my own code on purpose.</p>
+    <p class="cardmeta"><span class="lvl lvl-intermediate">intermediate</span><span class="tg">#testing</span><span class="tg">#mutation-testing</span><span class="tg">#rag</span></p>
   </a>
   <!-- /POSTS -->
 
@@ -61,7 +86,7 @@
     <li>Guardrails in code rather than in a prompt</li>
     <li>Containment, and how the metric gets gamed</li>
   </ul>
-  <p style="color:var(--muted); font-size:.9rem;">Pages under
+  <p style="color:var(--muted); font-size:.9rem;">Notes under
   <code>/learn/</code> are generated from <code>posts/*.md</code> by
   <code>build.py</code> — edit the markdown, not the HTML.</p>
 

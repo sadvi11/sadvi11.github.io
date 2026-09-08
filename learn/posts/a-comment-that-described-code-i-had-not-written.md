@@ -1,7 +1,10 @@
 ---
 title: A comment that described code I had not written
 lede: The docstring said the blocking call was dispatched to a thread so it would not hold the event loop. It was not. The results were identical, the tests passed, and the concurrency simply never happened.
-tag: Things I got wrong
+topic: Things I got wrong
+level: intermediate
+tags: async, python, concurrency
+related: tests-that-were-lying
 description: My docstring said the blocking call went to a thread pool. It did not. Same results, passing tests, no concurrency at all.
 footer: Code and test: [amazon-connect-rag-agent](https://github.com/sadvi11/amazon-connect-rag-agent).
 ---

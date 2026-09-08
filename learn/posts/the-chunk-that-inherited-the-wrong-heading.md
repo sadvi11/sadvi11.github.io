@@ -1,7 +1,10 @@
 ---
 title: The chunk that inherited the wrong heading
 lede: A short section fell below my minimum chunk size, merged backwards into the section before it, and took that section's heading with it. It then embedded under the wrong topic and became unreachable by anyone asking about it. Nothing errored.
-tag: Things I got wrong
+topic: Things I got wrong
+level: intermediate
+tags: chunking, rag, embeddings
+related: why-hybrid-search, tests-that-were-lying
 description: A short section merged into its neighbour, embedded under the wrong topic, and became unreachable. Nothing logged anything.
 footer: Implementation: [amazon-connect-rag-agent](https://github.com/sadvi11/amazon-connect-rag-agent) — `src/chunking.py`.
 ---

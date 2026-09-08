@@ -53,3 +53,34 @@ img { max-width: 100%; height: auto; border-radius: 6px; border: 1px solid var(-
        margin: 0 0 .8rem; }
 footer { border-top: 1px solid var(--rule); margin-top: 4rem; padding-top: 1.2rem;
          font-family: system-ui, sans-serif; font-size: .85rem; color: var(--muted); }
+
+/* --- reference additions --- */
+.crumb { font-family: system-ui, sans-serif; font-size: .82rem; color: var(--muted); margin: 0 0 .6rem; }
+.crumb a { color: var(--muted); }
+.lvl { display: inline-block; font-family: system-ui, sans-serif; font-size: .68rem;
+       text-transform: uppercase; letter-spacing: .07em; padding: .12rem .5rem;
+       border-radius: 99px; margin-right: .5rem; font-weight: 600; }
+.lvl-basic        { background: #d8f0dd; color: #16502a; }
+.lvl-intermediate { background: #fdeecd; color: #6b4310; }
+.lvl-advanced     { background: #f6dcd8; color: #6d2018; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .lvl-basic        { background: #1c3a26; color: #a8e0ba; }
+  :root:not([data-theme="light"]) .lvl-intermediate { background: #3d2f14; color: #f0cf94; }
+  :root:not([data-theme="light"]) .lvl-advanced     { background: #3d1f1c; color: #f0b4ab; }
+}
+.tg { font-family: ui-monospace, Menlo, monospace; font-size: .74rem;
+      color: var(--muted); margin-right: .5rem; }
+.toc { border: 1px solid var(--rule); background: var(--card); border-radius: 8px;
+       padding: 1rem 1.2rem .9rem; margin: 0 0 2.2rem; }
+.toc p { font-family: system-ui, sans-serif; font-size: .74rem; text-transform: uppercase;
+         letter-spacing: .07em; color: var(--muted); margin: 0 0 .5rem; }
+.toc ol { margin: 0; padding-left: 1.1rem; font-family: system-ui, sans-serif; font-size: .93rem; }
+.toc li { margin-bottom: .25rem; }
+.prereq { font-family: system-ui, sans-serif; font-size: .92rem; background: var(--card);
+          border-left: 3px solid var(--accent); padding: .7rem .9rem; border-radius: 0 6px 6px 0;
+          margin: 0 0 1.6rem; }
+.anchor { opacity: 0; margin-left: .4rem; text-decoration: none; color: var(--muted);
+          font-weight: 400; }
+h2:hover .anchor { opacity: 1; }
+.cardmeta { margin: .6rem 0 0 !important; }
+.topic-blurb { color: var(--muted); font-size: .95rem; margin: -.4rem 0 1rem; }

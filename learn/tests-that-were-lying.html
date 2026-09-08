@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>The tests that were lying to me — Sadhvi Sharma</title>
+<title>The tests that were lying to me — Notes — Sadhvi Sharma</title>
 <meta name="description" content="Ninety-one passing tests, and three of them asserted nothing at all. How deliberately breaking my own code found them.">
 <link rel="stylesheet" href="style.css">
 </head>
@@ -14,23 +14,34 @@
   <nav><a href="/">Portfolio</a><a href="/learn/">Notes</a><a href="https://github.com/sadvi11">GitHub</a></nav>
 </header>
 
-<span class="tag">Things I got wrong</span>
+<p class="crumb"><a href="/learn/">Notes</a> / Things I got wrong</p>
 <h1>The tests that were lying to me</h1>
 <p class="lede">I had ninety-one passing tests and I felt safe. Three of them were protecting nothing at all, and the only way I found out was by breaking my own code on purpose.</p>
-<p class="meta">Sadhvi Sharma · Calgary</p>
+<p class="meta"><span class="lvl lvl-intermediate">intermediate</span><span class="tg">#testing</span><span class="tg">#mutation-testing</span><span class="tg">#rag</span></p>
+
+<nav class="toc">
+  <p>On this page</p>
+  <ol>
+    <li><a href="#the-false-comfort">The false comfort</a></li>
+    <li><a href="#the-uncomfortable-question">The uncomfortable question</a></li>
+    <li><a href="#what-the-three-were">What the three were</a></li>
+    <li><a href="#what-actually-got-me">What actually got me</a></li>
+    <li><a href="#the-rule-i-use-now">The rule I use now</a></li>
+  </ol>
+</nav>
 
 <p>Put your hand up if you have a smoke alarm. Keep it up if you have pressed
 the test button in the last six months.</p>
 <p>That gap is the whole problem. We install the thing that is supposed to save
 us and then trust it for years without ever asking it to prove it works. I did
 exactly that, in code, for about eighteen months.</p>
-<h2>The false comfort</h2>
+<h2 id="the-false-comfort">The false comfort<a class="anchor" href="#the-false-comfort">#</a></h2>
 <p>The project is a contact-centre chat bot: retrieval over a knowledge base,
 and a rule that it must refuse to answer rather than guess. Ninety-one tests,
 all green, running on every push with no cloud account needed.</p>
 <p>The word that matters is <em>safe</em>. Not confident — safe. I had stopped
 looking at them.</p>
-<h2>The uncomfortable question</h2>
+<h2 id="the-uncomfortable-question">The uncomfortable question<a class="anchor" href="#the-uncomfortable-question">#</a></h2>
 <p>Then: <strong>how do I know any of these tests would actually notice?</strong></p>
 <p>A test that cannot fail passes forever. It sits in the list looking exactly
 like a real one, it gets counted, it gets cited in a README — and it is
@@ -46,7 +57,7 @@ ok    caught: a confidently wrong bot reports perfect containment
 All 15 defects are caught. The checks are load-bearing.
 </code></pre>
 <p>Twelve caught something. Three did not.</p>
-<h2>What the three were</h2>
+<h2 id="what-the-three-were">What the three were<a class="anchor" href="#what-the-three-were">#</a></h2>
 <h3>1. An assertion that passed either way</h3>
 <p>My chunker prepends a document heading to each chunk before embedding it, so
 that a passage reading <em>&ldquo;within 30 days&rdquo;</em> still carries the word
@@ -79,12 +90,12 @@ never be produced by that path.</p>
 copies of the check that treats a model refusal as an abstention. Only the
 synchronous one had a test.</p>
 <p>The injected fault landed in the async copy. Nothing went red.</p>
-<h2>What actually got me</h2>
+<h2 id="what-actually-got-me">What actually got me<a class="anchor" href="#what-actually-got-me">#</a></h2>
 <p>All three had been <em>counted</em>. When I said &ldquo;ninety-one tests&rdquo;, I meant
 it. I would have said it in an interview. I was not lying — I was
 <strong>confidently wrong</strong>, which is worse, because being confidently
 wrong does not feel like anything at all.</p>
-<h2>The rule I use now</h2>
+<h2 id="the-rule-i-use-now">The rule I use now<a class="anchor" href="#the-rule-i-use-now">#</a></h2>
 <blockquote>
 <p>A safety net I have not seen catch something is a decoration.</p>
 </blockquote>
@@ -95,11 +106,16 @@ finding out the answer was three.</p>
 <p>The smoke alarm. The backup you have never restored from. The failover you
 have never triggered. You do not need to distrust them. You need to make one of
 them prove it, once.</p>
+<h2 id="related">Related</h2>
+<ul>
+  <li><a href="the-chunk-that-inherited-the-wrong-heading.html">The chunk that inherited the wrong heading</a></li>
+  <li><a href="a-comment-that-described-code-i-had-not-written.html">A comment that described code I had not written</a></li>
+</ul>
 
 <footer>
   <p>The fault injection script and the tests are public: <a href="https://github.com/sadvi11/amazon-connect-rag-agent">amazon-connect-rag-agent</a>.</p>
 
-  <p><a href="/learn/">← more notes</a></p>
+  <p><a href="/learn/">← all notes</a></p>
 </footer>
 
 </div>

@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chunking sets the ceiling on everything downstream — Notes — Sadhvi Sharma</title>
+<meta name="description" content="Retrieval cannot return a passage that chunking never produced. Whatever you do afterwards is bounded by that.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+
+<header class="site">
+  <nav><a href="/">Portfolio</a><a href="/learn/">Notes</a><a href="https://github.com/sadvi11">GitHub</a></nav>
+</header>
+
+<p class="crumb"><a href="/learn/">Notes</a> / Retrieval</p>
+<h1>Chunking sets the ceiling on everything downstream</h1>
+<p class="lede">Retrieval cannot return a passage that chunking never produced. Whatever you do afterwards is bounded by that.</p>
+<p class="meta"><span class="lvl lvl-basic">basic</span><span class="tg">#chunking</span><span class="tg">#rag</span><span class="tg">#embeddings</span></p>
+<p class="prereq"><b>Read first:</b> <a href="what-is-an-embedding.html">What an embedding actually is</a></p>
+
+<nav class="toc">
+  <p>On this page</p>
+  <ol>
+    <li><a href="#the-default-is-wrong-in-a-specific-way">The default is wrong in a specific way</a></li>
+    <li><a href="#three-rules-that-fix-most-of-it">Three rules that fix most of it</a></li>
+    <li><a href="#what-it-costs">What it costs</a></li>
+    <li><a href="#how-to-choose-the-size">How to choose the size</a></li>
+    <li><a href="#why-this-is-hard-to-notice-going-wrong">Why this is hard to notice going wrong</a></li>
+  </ol>
+</nav>
+
+<p>Everything clever you do downstream — hybrid search, rank fusion, a
+cross-encoder reranker — is bounded by whether the right span of text exists as
+a unit in the index. If chunking never produced it, no amount of ranking will
+find it.</p>
+<p>That makes chunking the least glamorous and most load-bearing decision in a
+retrieval pipeline.</p>
+<h2 id="the-default-is-wrong-in-a-specific-way">The default is wrong in a specific way<a class="anchor" href="#the-default-is-wrong-in-a-specific-way">#</a></h2>
+<p>Split every 500 characters. It is a photocopier with the guillotine set to a
+fixed width: some pages come out cut mid-sentence, the fragment makes no sense
+alone, and — this is the part that matters — <strong>it still looks like a complete
+page</strong>.</p>
+<p>A chunk beginning with half a clause and ending with half another gets embedded
+as one unit. The resulting vector is a blend of two incomplete thoughts and
+matches neither well.</p>
+<h2 id="three-rules-that-fix-most-of-it">Three rules that fix most of it<a class="anchor" href="#three-rules-that-fix-most-of-it">#</a></h2>
+<p><strong>Structure before size.</strong> Headings and paragraphs are authored boundaries.
+Somebody already decided those ideas belong together, and that decision is free
+information you are throwing away by counting characters.</p>
+<p><strong>Overlap by whole sentences.</strong> A sentence near a boundary belongs to both
+neighbours — without overlap, an answer sitting across the seam is retrievable
+from neither side. Overlapping by <em>character count</em> reintroduces exactly the
+mid-sentence cut you were avoiding.</p>
+<p><strong>Carry the heading into the chunk.</strong> A passage reading &ldquo;within 30 days&rdquo; is
+useless without &ldquo;Refunds&rdquo;, and nothing scrolls up inside a vector index. What
+gets embedded should be the heading plus the body, even if what gets displayed
+is only the body.</p>
+<h2 id="what-it-costs">What it costs<a class="anchor" href="#what-it-costs">#</a></h2>
+<p>Overlap costs storage and produces duplicate hits — the same passage arriving
+twice from adjacent chunks. Reranking collapses those, so the cost is real but
+bounded.</p>
+<p>Structure-aware splitting costs you a parser and some edge cases. One of those
+edge cases <a href="the-chunk-that-inherited-the-wrong-heading.html">cost me a section that became
+unreachable</a>.</p>
+<h2 id="how-to-choose-the-size">How to choose the size<a class="anchor" href="#how-to-choose-the-size">#</a></h2>
+<p>Honestly: start at roughly 500–800 characters, then tune against an eval set on
+your actual corpus. Anyone quoting a universal number is quoting a starting
+point as though it were a result.</p>
+<p>Big enough to hold one complete idea. Small enough that one chunk is about one
+thing.</p>
+<h2 id="why-this-is-hard-to-notice-going-wrong">Why this is hard to notice going wrong<a class="anchor" href="#why-this-is-hard-to-notice-going-wrong">#</a></h2>
+<p>A bad photocopy is visibly bad. A bad chunk is not. It embeds fine, retrieves
+sometimes, produces plausible answers to adjacent questions, and quietly lowers
+quality with nothing in any log.</p>
+<p>There is no exception, no alert, no red build — just answers slightly worse
+than they should be, in a way that only surfaces if you go looking.</p>
+<h2 id="related">Related</h2>
+<ul>
+  <li><a href="the-chunk-that-inherited-the-wrong-heading.html">The chunk that inherited the wrong heading</a></li>
+  <li><a href="why-hybrid-search.html">Why hybrid search, and how rank fusion actually works</a></li>
+</ul>
+
+<footer>
+  <p>Implementation in <a href="https://github.com/sadvi11/amazon-connect-rag-agent">amazon-connect-rag-agent</a> — <code>src/chunking.py</code>.</p>
+
+  <p><a href="/learn/">← all notes</a></p>
+</footer>
+
+</div>
+</body>
+</html>
