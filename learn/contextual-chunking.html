@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A chunk has to carry its own context — Notes — Sadhvi Sharma</title>
+<meta name="description" content="What gets embedded and what gets displayed do not have to be the same string. Once you separate them, a whole class of retrieval failure disappears.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+
+<header class="site">
+  <nav><a href="/">Portfolio</a><a href="/learn/">Notes</a><a href="https://github.com/sadvi11">GitHub</a></nav>
+</header>
+
+<p class="crumb"><a href="/learn/">Notes</a> / Retrieval</p>
+<h1>A chunk has to carry its own context</h1>
+<p class="lede">What gets embedded and what gets displayed do not have to be the same string. Once you separate them, a whole class of retrieval failure disappears.</p>
+<p class="meta"><span class="lvl lvl-intermediate">intermediate</span><span class="tg">#chunking</span><span class="tg">#rag</span><span class="tg">#embeddings</span></p>
+<p class="prereq"><b>Read first:</b> <a href="chunking-sets-the-ceiling.html">Chunking sets the ceiling on everything downstream</a>, <a href="what-is-an-embedding.html">What an embedding actually is</a></p>
+
+<nav class="toc">
+  <p>On this page</p>
+  <ol>
+    <li><a href="#the-failure-this-causes">The failure this causes</a></li>
+    <li><a href="#the-fix-is-one-property">The fix is one property</a></li>
+    <li><a href="#how-far-to-take-it">How far to take it</a></li>
+    <li><a href="#the-bug-that-made-me-careful">The bug that made me careful</a></li>
+    <li><a href="#what-to-test">What to test</a></li>
+  </ol>
+</nav>
+
+<p>Imagine finding a sticky note that says <strong>&ldquo;within 30 days&rdquo;</strong> and nothing else.</p>
+<p>It is not wrong. It is unusable, because it lost the thing that gave it
+meaning. You could ask whoever wrote it. A retriever cannot — the chunk is
+all there is.</p>
+<h2 id="the-failure-this-causes">The failure this causes<a class="anchor" href="#the-failure-this-causes">#</a></h2>
+<p>Split a support document into chunks and you routinely get one like this:</p>
+<pre><code>Processing takes 30 days from the date we receive the item back.
+Refunds are issued to the original payment method.
+</code></pre>
+<p>Nowhere in that text does the word <strong>&ldquo;refund&rdquo;</strong> appear as a topic. It was in
+the heading, two hundred characters up, and the heading is now a different
+chunk.</p>
+<p>So when a customer asks <em>&ldquo;how long do refunds take&rdquo;</em>, the passage that answers
+them exactly does not surface. Not because retrieval is bad — because the
+chunk does not contain the word the question is about.</p>
+<h2 id="the-fix-is-one-property">The fix is one property<a class="anchor" href="#the-fix-is-one-property">#</a></h2>
+<p>The insight is that <strong>what gets embedded and what gets displayed do not have to
+be the same string.</strong></p>
+<pre><code class="language-python">@property
+def embedding_text(self) -&gt; str:
+    &quot;&quot;&quot;What actually gets embedded.
+
+    The heading is prepended so a chunk saying &quot;within 30 days&quot; still
+    carries &quot;Refunds&quot; into its vector. Without this, that chunk is
+    unreachable by anyone who asks about refunds - which is everyone.
+    &quot;&quot;&quot;
+    return f&quot;{self.heading}\n\n{self.text}&quot;.strip() if self.heading else self.text
+</code></pre>
+<p>Embed <code>embedding_text</code>. Show <code>text</code>. The heading does its work in vector space
+and then gets out of the way.</p>
+<h2 id="how-far-to-take-it">How far to take it<a class="anchor" href="#how-far-to-take-it">#</a></h2>
+<p>The heading is the cheapest version. You can attach more:</p>
+<ul>
+<li><strong>Section path</strong> — <code>Refunds &gt; Damaged goods &gt; Reporting</code> rather than just the
+  nearest heading</li>
+<li><strong>Document title</strong> — matters when one corpus covers several products</li>
+<li><strong>A generated one-line summary</strong> of the parent section</li>
+</ul>
+<p>Each addition costs tokens in every chunk, in storage and at comparison time,
+and dilutes the chunk&rsquo;s own content in its vector. A chunk that is 60% context
+and 40% substance retrieves for the context and answers nothing.</p>
+<p>I use the heading and the document title. I have not needed more, and I would
+want an eval set showing a gain before adding it.</p>
+<h2 id="the-bug-that-made-me-careful">The bug that made me careful<a class="anchor" href="#the-bug-that-made-me-careful">#</a></h2>
+<p>I had a minimum chunk size — fragments below it merge backwards into the
+previous chunk, because a thirty-character fragment embeds to noise.</p>
+<p>Correct, <em>within a section</em>. My implementation did not check that. A short
+&ldquo;Returns&rdquo; section merged into the preceding &ldquo;Refunds&rdquo; chunk and
+<strong>inherited its heading</strong> — so the returns text was now embedded under the
+refunds topic, and unreachable by anyone asking about returns.</p>
+<p><a href="the-chunk-that-inherited-the-wrong-heading.html">The full write-up is here.</a></p>
+<p>The fix was one line: only merge backwards into a chunk from the same section.</p>
+<h2 id="what-to-test">What to test<a class="anchor" href="#what-to-test">#</a></h2>
+<p>Assert the negative, because it is the direction that silently stops being
+true:</p>
+<pre><code class="language-python">def test_a_short_section_is_not_absorbed_into_the_previous_one():
+    chunks = chunk_document(DOC, &quot;help.md&quot;)
+    assert &quot;Returns&quot; in {c.heading for c in chunks}
+</code></pre>
+<p>And make sure the test can actually fail. Mine could not, at first — the
+fixture I used had a body that already began with the heading word, so
+<code>embedding_text.startswith("Refunds")</code> was true whether or not the heading was
+prepended at all. <a href="tests-that-were-lying.html">I only found that by breaking the code on
+purpose.</a></p>
+<h2 id="related">Related</h2>
+<ul>
+  <li><a href="the-chunk-that-inherited-the-wrong-heading.html">The chunk that inherited the wrong heading</a></li>
+  <li><a href="why-hybrid-search.html">Why hybrid search, and how rank fusion actually works</a></li>
+</ul>
+
+<footer>
+  <p>Implementation in <a href="https://github.com/sadvi11/amazon-connect-rag-agent">amazon-connect-rag-agent</a> — <code>src/chunking.py</code>.</p>
+
+  <p><a href="/learn/">← all notes</a></p>
+</footer>
+
+</div>
+</body>
+</html>

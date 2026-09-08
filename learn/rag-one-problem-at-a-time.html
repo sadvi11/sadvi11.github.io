@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RAG, one problem at a time — Notes — Sadhvi Sharma</title>
+<meta name="description" content="Every piece of a retrieval pipeline exists because something simpler broke first. This is the ladder, and an honest note about which rungs I have actually stood on.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+
+<header class="site">
+  <nav><a href="/">Portfolio</a><a href="/learn/">Notes</a><a href="https://github.com/sadvi11">GitHub</a></nav>
+</header>
+
+<p class="crumb"><a href="/learn/">Notes</a> / Foundations</p>
+<h1>RAG, one problem at a time</h1>
+<p class="lede">Every piece of a retrieval pipeline exists because something simpler broke first. This is the ladder, and an honest note about which rungs I have actually stood on.</p>
+<p class="meta"><span class="lvl lvl-basic">basic</span><span class="tg">#rag</span><span class="tg">#retrieval</span><span class="tg">#architecture</span></p>
+
+<nav class="toc">
+  <p>On this page</p>
+  <ol>
+    <li><a href="#1-the-model-does-not-know-your-data">1. The model does not know your data</a></li>
+    <li><a href="#2-keyword-search-misses-meaning">2. Keyword search misses meaning</a></li>
+    <li><a href="#3-semantic-search-misses-exact-identifiers">3. Semantic search misses exact identifiers</a></li>
+    <li><a href="#4-documents-are-too-long-to-embed-as-one-unit">4. Documents are too long to embed as one unit</a></li>
+    <li><a href="#5-chunks-lose-the-context-around-them">5. Chunks lose the context around them</a></li>
+    <li><a href="#6-the-top-results-are-noisy">6. The top results are noisy</a></li>
+    <li><a href="#the-three-rungs-i-have-not-built">The three rungs I have not built</a></li>
+    <li><a href="#why-the-ladder-is-worth-keeping-in-this-order">Why the ladder is worth keeping in this order</a></li>
+  </ol>
+</nav>
+
+<p>RAG pipelines look complicated when you meet them as a finished diagram. They
+are much easier to hold if you meet them the way they were built: each piece
+exists because the thing before it broke.</p>
+<p>Here is the ladder, with a note on each rung about whether I have built it or
+only read about it. I am keeping that distinction visible because it is the
+difference between a note worth reading and a summary of somebody else&rsquo;s blog.</p>
+<h2 id="1-the-model-does-not-know-your-data">1. The model does not know your data<a class="anchor" href="#1-the-model-does-not-know-your-data">#</a></h2>
+<p><strong>Fix: retrieval.</strong> Fetch relevant documents at query time and put them in the
+prompt.</p>
+<p>That is the entire idea. Everything below is a repair to a problem this
+creates.</p>
+<p>→ <a href="rag-versus-fine-tuning.html">Why retrieval rather than fine-tuning</a> · <em>built</em></p>
+<h2 id="2-keyword-search-misses-meaning">2. Keyword search misses meaning<a class="anchor" href="#2-keyword-search-misses-meaning">#</a></h2>
+<p>Someone asks &ldquo;when do I get my money back&rdquo;. Your document says &ldquo;refunds are
+processed within 30 days&rdquo;. Not one content word in common.</p>
+<p><strong>Fix: embeddings and vector search.</strong> Search by meaning rather than by string.</p>
+<p>→ <a href="what-is-an-embedding.html">What an embedding actually is</a> · <em>built</em></p>
+<h2 id="3-semantic-search-misses-exact-identifiers">3. Semantic search misses exact identifiers<a class="anchor" href="#3-semantic-search-misses-exact-identifiers">#</a></h2>
+<p>Now the opposite failure. Somebody asks about policy <code>RTN-14</code> and the embedding
+maps it to whatever happens to sit nearby, because generalising is what
+embeddings do.</p>
+<p><strong>Fix: hybrid search.</strong> Run keyword search alongside vector search and fuse the
+two rankings — by position, not score, because the scores are not on the same
+scale.</p>
+<p>→ <a href="why-hybrid-search.html">Why hybrid search, and how rank fusion works</a> · <em>built</em></p>
+<h2 id="4-documents-are-too-long-to-embed-as-one-unit">4. Documents are too long to embed as one unit<a class="anchor" href="#4-documents-are-too-long-to-embed-as-one-unit">#</a></h2>
+<p><strong>Fix: chunking.</strong> Split into retrievable pieces.</p>
+<p>And immediately: chunking sets the ceiling on everything downstream, because
+retrieval cannot return a passage chunking never produced.</p>
+<p>→ <a href="chunking-sets-the-ceiling.html">Chunking sets the ceiling</a> · <em>built</em></p>
+<h2 id="5-chunks-lose-the-context-around-them">5. Chunks lose the context around them<a class="anchor" href="#5-chunks-lose-the-context-around-them">#</a></h2>
+<p>A chunk reading &ldquo;within 30 days&rdquo; is useless on its own. The heading that gave
+it meaning is two chunks up, and nothing scrolls up inside a vector index.</p>
+<p><strong>Fix: attach document-level context to each chunk before embedding it.</strong></p>
+<p>→ <a href="the-chunk-that-inherited-the-wrong-heading.html">The chunk that inherited the wrong heading</a>
+· <em>built, and got it wrong first</em></p>
+<h2 id="6-the-top-results-are-noisy">6. The top results are noisy<a class="anchor" href="#6-the-top-results-are-noisy">#</a></h2>
+<p>Retrieval optimises recall — is the right passage in the top twenty at all.
+That is not the same as having it first.</p>
+<p><strong>Fix: reranking.</strong> Score the shortlist again, more carefully.</p>
+<p><em>Built — with a caveat I would rather state than have found.</em> Mine scores term
+overlap, not a cross-encoder. It measures vocabulary, not meaning, and it has a
+failure I keep as a deliberately failing test: the question &ldquo;what policy covers
+salary disputes&rdquo; scores at the threshold because the word &ldquo;policy&rdquo; matches,
+though the corpus says nothing about salaries. The fix is a cross-encoder
+behind the same interface, not a higher threshold.</p>
+<hr />
+<h2 id="the-three-rungs-i-have-not-built">The three rungs I have not built<a class="anchor" href="#the-three-rungs-i-have-not-built">#</a></h2>
+<p>I have read about these. That is not the same thing, and this section exists so
+I do not quietly imply otherwise.</p>
+<p><strong>Query rewriting and HyDE.</strong> The user&rsquo;s question is vague, so you improve it
+before searching — or generate a hypothetical answer, embed <em>that</em>, and search
+with it, on the theory that an answer looks more like the target passage than a
+question does. It helps on sparse corpora. It also adds a model call to every
+query, which on a chat turn is latency the customer feels. I would want to
+measure that trade before adopting it, and I have not.</p>
+<p><strong>GraphRAG.</strong> When the answer is spread across documents and no single chunk
+connects them, you extract entities and relationships into a graph and traverse
+it. The cases I have seen it used for are multi-hop questions — &ldquo;which of our
+suppliers are affected by X&rdquo; — where chunk-level retrieval structurally cannot
+help. I have not built one, so I have no view on what it costs to maintain.</p>
+<p><strong>Agentic RAG.</strong> One retrieval pass is not enough, so the system retrieves,
+judges what came back, and retrieves again. I have built agents with tool use
+and iteration caps, but not a retrieval loop that evaluates its own results and
+goes round again.</p>
+<h2 id="why-the-ladder-is-worth-keeping-in-this-order">Why the ladder is worth keeping in this order<a class="anchor" href="#why-the-ladder-is-worth-keeping-in-this-order">#</a></h2>
+<p>Two reasons.</p>
+<p><strong>Debugging.</strong> When an answer is wrong, walk the rungs downward. Was the
+passage retrieved at all? Then it is chunking or retrieval. Retrieved but
+ranked low? Reranking. Ranked first but dropped before the prompt? Context
+budget. In the prompt and still wrong? Now it is the prompt or the model.</p>
+<p><strong>Not adding things you do not need.</strong> Every rung costs latency, money and
+another thing that can break. Hybrid search doubles your query cost. Reranking
+adds a model call. GraphRAG adds an extraction pipeline and a graph to keep
+current.</p>
+<p>The right question is never &ldquo;which techniques does a good RAG system have&rdquo;. It
+is &ldquo;which problem am I actually having&rdquo;.</p>
+<h2 id="related">Related</h2>
+<ul>
+  <li><a href="what-is-an-embedding.html">What an embedding actually is</a></li>
+  <li><a href="chunking-sets-the-ceiling.html">Chunking sets the ceiling on everything downstream</a></li>
+  <li><a href="why-hybrid-search.html">Why hybrid search, and how rank fusion actually works</a></li>
+</ul>
+
+<footer>
+  <p>Most of this is implemented in <a href="https://github.com/sadvi11/amazon-connect-rag-agent">amazon-connect-rag-agent</a>.</p>
+
+  <p><a href="/learn/">← all notes</a></p>
+</footer>
+
+</div>
+</body>
+</html>
