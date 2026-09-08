@@ -1,0 +1,46 @@
+name: Build notes
+
+# Runs build.py whenever a note changes and commits the generated HTML back.
+#
+# The point is that adding a note never requires a local checkout. Write the
+# markdown in GitHub's web editor - on a laptop or a phone - commit, and the
+# pages regenerate.
+#
+# No infinite loop: this only triggers on learn/posts/** and learn/build.py,
+# and it only ever writes learn/*.html. The commit it makes cannot retrigger it.
+
+on:
+  push:
+    paths:
+      - "learn/posts/**"
+      - "learn/build.py"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11"}
+
+      - run: pip install markdown
+
+      - name: Build
+        working-directory: learn
+        run: python3 build.py
+
+      - name: Commit the generated pages
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet -- learn; then
+            echo "No change to the generated pages."
+            exit 0
+          fi
+          git add learn
+          git commit -m "notes: rebuild pages"
+          git push

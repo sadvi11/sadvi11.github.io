@@ -2,7 +2,20 @@
 
 Pages here are **generated**. Edit the markdown, not the HTML.
 
-## Adding a post
+## Adding a note — two ways
+
+### From the browser, no checkout
+
+1. Go to `learn/posts/` on GitHub → **Add file → Create new file**
+2. Name it `my-note.md`, paste the front matter from `TEMPLATE.md`, write
+3. Commit
+
+A GitHub Action rebuilds every page and the index, and commits the HTML back.
+Live in about a minute. This works from a phone.
+
+Editing an existing note is the same: open the `.md`, click the pencil, commit.
+
+### Locally
 
 ```bash
 cd learn
