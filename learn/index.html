@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Notes — Sadhvi Sharma</title>
+<meta name="description" content="Working notes on retrieval, agents and production AI — written from things I built and things I got wrong.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+
+  <header class="site">
+    <nav>
+      <a href="/">Portfolio</a>
+      <a href="/learn/">Notes</a>
+      <a href="https://github.com/sadvi11">GitHub</a>
+      <a href="/cv.pdf">CV</a>
+    </nav>
+  </header>
+
+  <h1>Notes</h1>
+  <p class="lede">Working notes on retrieval, agents and production AI. Every one
+  is written from something I built — and most of them exist because I got it
+  wrong first and had to find out why.</p>
+
+  <p>I keep these because writing an explanation is the fastest way to discover
+  I did not understand something. If they are useful to anyone else, that is a
+  bonus rather than the point.</p>
+
+  <h2>Things I got wrong</h2>
+  <p style="color:var(--muted); margin-top:-.4rem;">The most useful notes. Each
+  one is a bug that produced no error message.</p>
+
+  <a class="card" href="tests-that-were-lying.html">
+    <h3>The tests that were lying to me</h3>
+    <p>Ninety-one passing tests, and three of them were asserting nothing at
+    all. How I found out, and why a green suite proves less than it looks.</p>
+  </a>
+
+  <a class="card" href="a-comment-that-described-code-i-had-not-written.html">
+    <h3>A comment that described code I had not written</h3>
+    <p>My docstring said the call went to a thread pool. It did not. Identical
+    results, passing tests, and no concurrency whatsoever.</p>
+  </a>
+
+  <a class="card" href="the-chunk-that-inherited-the-wrong-heading.html">
+    <h3>The chunk that inherited the wrong heading</h3>
+    <p>A short section merged into its neighbour, embedded under the wrong
+    topic, and became unreachable. Nothing logged anything.</p>
+  </a>
+
+  <h2>Retrieval</h2>
+
+  <a class="card" href="why-hybrid-search.html">
+    <h3>Why hybrid search, and how rank fusion actually works</h3>
+    <p>Dense search cannot find <code>RTN-14</code>. Keyword search cannot find
+    a paraphrase. Combining them needs rank, not score — worked through with
+    real numbers.</p>
+  </a>
+
+  <h2>Still to write</h2>
+  <ul style="color:var(--muted);">
+    <li>Abstention: why refusing is a feature, and where to put the gate</li>
+    <li>Context packing to a token budget, and what the ordering is worth</li>
+    <li>Guardrails in code rather than in a prompt</li>
+    <li>Containment, and how the metric gets gamed</li>
+  </ul>
+
+  <footer>
+    <p>Sadhvi Sharma — Calgary, Alberta.
+    <a href="https://github.com/sadvi11">github.com/sadvi11</a> ·
+    <a href="https://www.linkedin.com/in/sadhvi-sharma-5789a6249">LinkedIn</a></p>
+  </footer>
+
+</div>
+</body>
+</html>

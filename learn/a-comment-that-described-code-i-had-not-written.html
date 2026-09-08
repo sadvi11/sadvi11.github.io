@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A comment that described code I had not written — Sadhvi Sharma</title>
+<meta name="description" content="My docstring said the blocking call went to a thread pool. It did not. Same results, passing tests, no concurrency at all.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+
+<header class="site">
+  <nav><a href="/">Portfolio</a><a href="/learn/">Notes</a><a href="https://github.com/sadvi11">GitHub</a></nav>
+</header>
+
+<span class="tag">Things I got wrong</span>
+<h1>A comment that described code I had not written</h1>
+<p class="lede">The docstring said the blocking call was dispatched to a thread
+so it would not hold the event loop. It was not. The results were identical,
+the tests passed, and the concurrency simply never happened.</p>
+<p class="meta">Sadhvi Sharma · Calgary</p>
+
+<h2>The setup</h2>
+
+<p>A retrieval pipeline runs two searches — a dense vector search and a keyword
+search. They hit different systems and neither depends on the other, so they
+should run at the same time. The cost is then the slower of the two rather than
+the sum.</p>
+
+<pre><code>dense, keyword = await asyncio.gather(
+    _maybe_await(store.dense_search, query, k=k * 2),
+    _maybe_await(store.keyword_search, query, k=k * 2),
+)</code></pre>
+
+<p>The helper exists because the store might be synchronous — a plain boto3 or
+psycopg client — or already async. Here is what I wrote:</p>
+
+<pre><code>async def _maybe_await(fn, *args, **kwargs):
+    result = fn(*args, **kwargs)
+    if inspect.isawaitable(result):
+        return await result
+    # A synchronous store would block the event loop, so it goes to a thread.
+    return result</code></pre>
+
+<p>Read the comment. Then read the last line.</p>
+
+<h2>What was actually happening</h2>
+
+<p>Nothing goes to a thread. <code>fn(*args, **kwargs)</code> is called
+<em>inline</em>, inside a coroutine. A blocking call there holds the event loop
+for its entire duration, so the second search cannot begin until the first has
+finished.</p>
+
+<p><code>asyncio.gather</code> was doing exactly what it was told and there was
+nothing to overlap. I had written a comment describing the code I meant to
+write, and then not written it.</p>
+
+<p>The Python documentation is direct about the mechanism —
+<code>loop.run_in_executor()</code> with a thread pool runs blocking code
+<em>"in a different OS thread without blocking the OS thread that the event loop
+runs in"</em>
+(<a href="https://docs.python.org/3/library/asyncio-dev.html#running-blocking-code">asyncio developer notes</a>).
+<code>asyncio.to_thread()</code> is the modern wrapper. I had used neither.</p>
+
+<h2>Why no test caught it</h2>
+
+<p>This is the part worth sitting with. <strong>The results were identical.</strong></p>
+
+<p>Sequential and concurrent execution return the same passages in the same
+order. Every correctness test passed, because correctness was never affected.
+The only difference was elapsed time, and nothing was measuring elapsed time.</p>
+
+<p>It is a bug that appears exclusively under load, in production, when
+concurrency is the thing you were counting on.</p>
+
+<h2>The fix, and the test that can see it</h2>
+
+<pre><code>async def _maybe_await(fn, *args, **kwargs):
+    if inspect.iscoroutinefunction(fn):
+        return await fn(*args, **kwargs)
+    return await asyncio.to_thread(fn, *args, **kwargs)</code></pre>
+
+<p>And the test measures <strong>wall-clock time</strong>, because that is the
+only thing that can tell the difference:</p>
+
+<pre><code>async def test_the_two_searches_actually_overlap():
+    store = SlowStore()          # each search sleeps 150ms
+    start = time.perf_counter()
+    await rag.retrieve_async("how long do refunds take", store)
+    elapsed = time.perf_counter() - start
+
+    sequential = SlowStore.DELAY * 2
+    assert elapsed &lt; sequential * 0.75, (
+        f"took {elapsed:.3f}s against {sequential:.3f}s sequential - the "
+        f"searches are not overlapping")</code></pre>
+
+<h2>What I took from it</h2>
+
+<p>Two things.</p>
+
+<p><strong>A comment is not evidence about behaviour.</strong> It is evidence
+about intent, and intent and behaviour drift silently. I now read comments as a
+question — <em>does it actually do this?</em> — rather than as documentation.</p>
+
+<p><strong>Some properties are invisible to correctness tests.</strong>
+Concurrency, cost, and latency are not about whether the output is right. If
+the only thing you assert is the result, you cannot see them — and they will
+be perfectly fine right up until traffic arrives.</p>
+
+<footer>
+  <p>Code and test:
+  <a href="https://github.com/sadvi11/amazon-connect-rag-agent">amazon-connect-rag-agent</a>.</p>
+  <p><a href="/learn/">← more notes</a></p>
+</footer>
+
+</div>
+</body>
+</html>

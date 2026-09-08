@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The tests that were lying to me — Sadhvi Sharma</title>
+<meta name="description" content="Ninety-one passing tests, and three of them asserted nothing at all. How deliberately breaking my own code found them.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+
+<header class="site">
+  <nav><a href="/">Portfolio</a><a href="/learn/">Notes</a><a href="https://github.com/sadvi11">GitHub</a></nav>
+</header>
+
+<span class="tag">Things I got wrong</span>
+<h1>The tests that were lying to me</h1>
+<p class="lede">I had ninety-one passing tests and I felt safe. Three of them
+were protecting nothing at all, and the only way I found out was by breaking my
+own code on purpose.</p>
+<p class="meta">Sadhvi Sharma · Calgary</p>
+
+<p>Put your hand up if you have a smoke alarm. Keep it up if you have pressed
+the test button in the last six months.</p>
+
+<p>That gap is the whole problem. We install the thing that is supposed to save
+us and then trust it for years without ever asking it to prove it works. I did
+exactly that, in code, for about eighteen months.</p>
+
+<h2>The false comfort</h2>
+
+<p>The project is a contact-centre chat bot: retrieval over a knowledge base,
+and a rule that it must refuse to answer rather than guess. Ninety-one tests,
+all green, running on every push with no cloud account needed.</p>
+
+<p>The word that matters is <em>safe</em>. Not confident — safe. I had stopped
+looking at them.</p>
+
+<h2>The uncomfortable question</h2>
+
+<p>Then: <strong>how do I know any of these tests would actually notice?</strong></p>
+
+<p>A test that cannot fail passes forever. It sits in the list looking exactly
+like a real one, it gets counted, it gets cited in a README — and it is
+protecting nothing.</p>
+
+<p>So I wrote a script that reintroduces each defect on purpose, one at a time,
+runs the suite, restores the file, and <strong>fails the build if the suite
+stayed green</strong>.</p>
+
+<pre><code>ok    caught: the bot answers weak matches instead of refusing
+ok    caught: a model saying "I don't know" counts as a contained answer
+ok    caught: escalation never sets the flag the contact flow branches on
+ok    caught: a confidently wrong bot reports perfect containment
+...
+All 15 defects are caught. The checks are load-bearing.</code></pre>
+
+<p>Twelve caught something. Three did not.</p>
+
+<h2>What the three were</h2>
+
+<h3>1. An assertion that passed either way</h3>
+
+<p>My chunker prepends a document heading to each chunk before embedding it, so
+that a passage reading <em>"within 30 days"</em> still carries the word
+<em>"Refunds"</em>. The test:</p>
+
+<pre><code>assert chunk.embedding_text.startswith("Refunds")</code></pre>
+
+<p>The fixture I used was a section whose body already began with the word
+"Refunds". So the assertion was true whether or not the heading was prepended
+at all. Delete the feature, test still passes.</p>
+
+<p>The fix was to change the fixture so the body starts with a different word,
+and add the assertion that actually matters:</p>
+
+<pre><code>assert not chunk.text.startswith("Refunds")   # fixture isolates the heading
+assert chunk.embedding_text.startswith("Refunds")
+assert chunk.embedding_text != chunk.text</code></pre>
+
+<h3>2. A validator no code path could reach</h3>
+
+<p>I have a rule that an ungrounded answer must escalate to a human — otherwise
+the customer is told "I don't know" and then left in a loop with the bot. It is
+enforced in a Pydantic validator on the response model.</p>
+
+<p>It was untested, and it looked tested. Every test went through the HTTP
+endpoint, and the handler <em>derives</em> the escalation flag from whether the
+answer was grounded. The invalid combination the validator guards against can
+never be produced by that path.</p>
+
+<p>The fix was to construct the model directly:</p>
+
+<pre><code>with pytest.raises(ValidationError):
+    AskResponse(answer="I don't know", grounded=False, escalate=False, ...)</code></pre>
+
+<h3>3. A safety check tested on one branch of two</h3>
+
+<p>I had refactored to add an async version of the answer path. That created two
+copies of the check that treats a model refusal as an abstention. Only the
+synchronous one had a test.</p>
+
+<p>The injected fault landed in the async copy. Nothing went red.</p>
+
+<h2>What actually got me</h2>
+
+<p>All three had been <em>counted</em>. When I said "ninety-one tests", I meant
+it. I would have said it in an interview. I was not lying — I was
+<strong>confidently wrong</strong>, which is worse, because being confidently
+wrong does not feel like anything at all.</p>
+
+<h2>The rule I use now</h2>
+
+<blockquote>A safety net I have not seen catch something is a decoration.</blockquote>
+
+<p>Not a bad thing. Just not the thing I thought it was.</p>
+
+<p>This is not a new idea — it is mutation testing, and tools for it have
+existed for years. What was new to me was running it against my own work and
+finding out the answer was three.</p>
+
+<p>The smoke alarm. The backup you have never restored from. The failover you
+have never triggered. You do not need to distrust them. You need to make one of
+them prove it, once.</p>
+
+<footer>
+  <p>The fault injection script and the tests are public:
+  <a href="https://github.com/sadvi11/amazon-connect-rag-agent">amazon-connect-rag-agent</a>.</p>
+  <p><a href="/learn/">← more notes</a></p>
+</footer>
+
+</div>
+</body>
+</html>
