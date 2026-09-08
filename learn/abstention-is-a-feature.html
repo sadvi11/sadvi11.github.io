@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Abstention is a feature, not a failure — Notes — Sadhvi Sharma</title>
+<meta name="description" content="The expensive mistake is not &quot;I don't know&quot;. It is a confident wrong answer about somebody's money, delivered in the brand's voice.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+
+<header class="site">
+  <nav><a href="/">Portfolio</a><a href="/learn/">Notes</a><a href="https://github.com/sadvi11">GitHub</a></nav>
+</header>
+
+<p class="crumb"><a href="/learn/">Notes</a> / Production</p>
+<h1>Abstention is a feature, not a failure</h1>
+<p class="lede">The expensive mistake is not "I don't know". It is a confident wrong answer about somebody's money, delivered in the brand's voice.</p>
+<p class="meta"><span class="lvl lvl-intermediate">intermediate</span><span class="tg">#rag</span><span class="tg">#grounding</span><span class="tg">#guardrails</span></p>
+<p class="prereq"><b>Read first:</b> <a href="why-hybrid-search.html">Why hybrid search, and how rank fusion actually works</a></p>
+
+<nav class="toc">
+  <p>On this page</p>
+  <ol>
+    <li><a href="#why-a-prompt-is-not-enough">Why a prompt is not enough</a></li>
+    <li><a href="#two-gates-before-one-after">Two gates before, one after</a></li>
+    <li><a href="#generate-last-not-first">Generate last, not first</a></li>
+    <li><a href="#the-asymmetry-that-sets-the-threshold">The asymmetry that sets the threshold</a></li>
+    <li><a href="#test-each-gate-separately">Test each gate separately</a></li>
+  </ol>
+</nav>
+
+<p>A good pharmacist says &ldquo;I can&rsquo;t advise on that, see your doctor.&rdquo; A bad one
+guesses, to be helpful. The good one is more trustworthy precisely because
+there is a line they will not cross.</p>
+<h2 id="why-a-prompt-is-not-enough">Why a prompt is not enough<a class="anchor" href="#why-a-prompt-is-not-enough">#</a></h2>
+<p>The usual approach is an instruction: <em>&ldquo;If the context does not contain the
+answer, say you don&rsquo;t know.&rdquo;</em></p>
+<p>A prompt is a request. A persistent customer can move a model off it, and so
+can text inside a retrieved document, because the model has no channel
+separation — your instructions and the retrieved content are one token stream.</p>
+<p>A function that returns early cannot be talked round.</p>
+<h2 id="two-gates-before-one-after">Two gates before, one after<a class="anchor" href="#two-gates-before-one-after">#</a></h2>
+<pre><code class="language-python">if not passages:
+    return REFUSAL
+if len(passages) &lt; MIN_PASSAGES:      # one hit can be coincidence
+    return REFUSAL
+if max(p.score for p in passages) &lt; MIN_RELEVANCE:
+    return REFUSAL
+</code></pre>
+<p>Then generate. Then check again: if the model declined despite adequate
+context, that is an abstention, not an answer.</p>
+<h2 id="generate-last-not-first">Generate last, not first<a class="anchor" href="#generate-last-not-first">#</a></h2>
+<p>Checking after generating costs a model call you throw away — and it leaves an
+unusable answer sitting in the process where a future maintainer may be tempted
+to return it.</p>
+<h2 id="the-asymmetry-that-sets-the-threshold">The asymmetry that sets the threshold<a class="anchor" href="#the-asymmetry-that-sets-the-threshold">#</a></h2>
+<p>Refusing a question you could have answered costs one transfer to a human.
+Answering one you could not costs a customer a wrong answer about their money.</p>
+<p>Those are not equal, so the threshold should not sit in the middle.</p>
+<h2 id="test-each-gate-separately">Test each gate separately<a class="anchor" href="#test-each-gate-separately">#</a></h2>
+<p>Mine did not, at first. The passage-count gate was catching everything, so the
+relevance threshold refused nothing at all — while still being cited as a
+control in the README. Two checks where one is inert is worse than one honest
+check, because the inert one still gets counted.</p>
+<h2 id="related">Related</h2>
+<ul>
+  <li><a href="tests-that-were-lying.html">The tests that were lying to me</a></li>
+</ul>
+
+<footer>
+  <p>Implementation in <a href="https://github.com/sadvi11/amazon-connect-rag-agent">amazon-connect-rag-agent</a> — <code>src/rag.py</code>.</p>
+
+  <p><a href="/learn/">← all notes</a></p>
+</footer>
+
+</div>
+</body>
+</html>
