@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Counting tokens without a tokenizer — Notes — Sadhvi Sharma</title>
+<meta name="description" content="I budget context in tokens and I do not use a tokenizer to do it. That is a deliberate choice, and the reason is the same reason every model ships its own.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+
+<header class="site">
+  <nav><a href="/">Portfolio</a><a href="/learn/">Notes</a><a href="https://github.com/sadvi11">GitHub</a></nav>
+</header>
+
+<p class="crumb"><a href="/learn/">Notes</a> / Engineering</p>
+<h1>Counting tokens without a tokenizer</h1>
+<p class="lede">I budget context in tokens and I do not use a tokenizer to do it. That is a deliberate choice, and the reason is the same reason every model ships its own.</p>
+<p class="meta"><span class="lvl lvl-intermediate">intermediate</span><span class="tg">#tokens</span><span class="tg">#cost</span><span class="tg">#context</span><span class="tg">#llm</span></p>
+<p class="prereq"><b>Read first:</b> <a href="what-is-an-embedding.html">What an embedding actually is</a></p>
+
+<nav class="toc">
+  <p>On this page</p>
+  <ol>
+    <li><a href="#what-the-estimate-is-for">What the estimate is for</a></li>
+    <li><a href="#why-a-tokenizer-is-a-bigger-commitment-than-it-looks">Why a tokenizer is a bigger commitment than it looks</a></li>
+    <li><a href="#why-they-differ-at-all">Why they differ at all</a></li>
+    <li><a href="#one-correction-worth-making">One correction worth making</a></li>
+    <li><a href="#where-my-estimate-breaks">Where my estimate breaks</a></li>
+    <li><a href="#estimated-is-not-measured">Estimated is not measured</a></li>
+    <li><a href="#when-i-would-switch">When I would switch</a></li>
+  </ol>
+</nav>
+
+<p>My context packer fills a token budget. It decides how many retrieved passages
+fit in the prompt before the cost stops being worth it.</p>
+<p>It counts tokens like this:</p>
+<pre><code class="language-python">CHARS_PER_TOKEN = 4
+
+def estimate_tokens(text: str) -&gt; int:
+    return max(1, len(text) // CHARS_PER_TOKEN)
+</code></pre>
+<p>Divide by four. That is the whole thing, and it is on purpose.</p>
+<h2 id="what-the-estimate-is-for">What the estimate is for<a class="anchor" href="#what-the-estimate-is-for">#</a></h2>
+<p>The question this number answers is narrow: <strong>does one more passage fit?</strong></p>
+<p>That is a budgeting decision, and it tolerates error in a way that a hard limit
+does not. If the estimate is 15% out, I drop a passage I could have kept, or
+keep one I should have dropped. Neither is a failed request.</p>
+<p>Being wrong in the safe direction costs a passage. Being precise costs a
+dependency.</p>
+<h2 id="why-a-tokenizer-is-a-bigger-commitment-than-it-looks">Why a tokenizer is a bigger commitment than it looks<a class="anchor" href="#why-a-tokenizer-is-a-bigger-commitment-than-it-looks">#</a></h2>
+<p>The obvious objection is: just use the real tokenizer, it is a pip install.</p>
+<p>The problem is <em>which</em> real tokenizer. Every model family ships its own, and
+they are not interchangeable — because a tokenizer is not a utility bolted on
+before the model, it is <strong>part of the model</strong>.</p>
+<p>The model was trained against specific token IDs. Swap the tokenizer and the
+IDs stop meaning what the weights expect. You cannot upgrade one without
+retraining the other.</p>
+<p>So committing to a tokenizer means committing to a model family in a place in
+my code that otherwise does not care which model it is talking to. My pipeline
+is deliberately raw HTTP against an API. Pulling in a model-specific tokenizer
+to count characters would put a hard dependency in the one layer I kept
+portable.</p>
+<h2 id="why-they-differ-at-all">Why they differ at all<a class="anchor" href="#why-they-differ-at-all">#</a></h2>
+<p>Three reasons, and they compound.</p>
+<p><strong>Training data.</strong> The tokenizer is learned from the corpus. One trained mostly
+on English learns &ldquo;hello&rdquo; as a single token. Show it Hindi or Chinese and it
+has no learned pieces for those words, so it fragments them into many small
+ones. More tokens for the same meaning — slower and more expensive for exactly
+the users who are already least well served.</p>
+<p><strong>Vocabulary size.</strong> Bigger vocabulary means fewer tokens per word, but a
+larger embedding matrix. It is a real trade and teams land in different places:
+T5-base uses a 32k vocabulary; Gemma 3 uses 256k
+(<a href="https://github.com/google/sentencepiece">SentencePiece README</a>).</p>
+<p><strong>Algorithm.</strong> Byte-Pair Encoding, WordPiece, and the unigram language model
+split text differently.</p>
+<h2 id="one-correction-worth-making">One correction worth making<a class="anchor" href="#one-correction-worth-making">#</a></h2>
+<p>You will often see this listed as &ldquo;BPE, SentencePiece, or WordPiece&rdquo;, as
+though they were three algorithms.</p>
+<p>They are not parallel. <strong>SentencePiece is a library, and it implements BPE and
+unigram</strong> — from its own README: <em>&ldquo;It implements subword units—including
+Byte-Pair-Encoding (BPE) and the unigram language model.&rdquo;</em></p>
+<p>The algorithms are BPE, WordPiece and unigram. SentencePiece is one way to run
+two of them, notable for treating input as raw Unicode so it needs no
+language-specific pre-processing.</p>
+<p>I mention it because I have repeated the wrong version myself, and because it
+is the kind of detail that separates having read about something from having
+looked it up.</p>
+<h2 id="where-my-estimate-breaks">Where my estimate breaks<a class="anchor" href="#where-my-estimate-breaks">#</a></h2>
+<p>Four characters per token is a rule of thumb for English prose. It degrades on:</p>
+<ul>
+<li><strong>Other scripts</strong> — the fragmentation problem above, and the direction of
+  the error flips</li>
+<li><strong>Code</strong> — punctuation-dense text tokenizes differently from prose</li>
+<li><strong>Long identifiers</strong> — <code>ApproximateNumberOfMessagesVisible</code> is one word and
+  several tokens</li>
+</ul>
+<p>My corpus is English support documentation, so the heuristic holds. On a
+multilingual corpus I would measure the real ratio before trusting it, and
+probably land on a different constant rather than a different method.</p>
+<h2 id="estimated-is-not-measured">Estimated is not measured<a class="anchor" href="#estimated-is-not-measured">#</a></h2>
+<p>The important part: <strong>I do not report the estimate as usage.</strong></p>
+<p>The estimate decides what to pack. The number I record as actual token
+consumption comes back from the model response, where it is exact and costs
+nothing to read.</p>
+<p>Estimate to make a decision in advance. Measure to know what happened. Those
+are different jobs and conflating them is how a cost dashboard ends up
+confidently wrong.</p>
+<h2 id="when-i-would-switch">When I would switch<a class="anchor" href="#when-i-would-switch">#</a></h2>
+<p>If I needed to <em>enforce</em> a hard limit rather than budget against a soft one —
+rejecting a request that would exceed a context window rather than trimming
+toward it — the estimate is no longer good enough and the dependency becomes
+worth it.</p>
+<p>I have not needed that. The budget is well below the window precisely so the
+approximation has room to be wrong.</p>
+<h2 id="related">Related</h2>
+<ul>
+  <li><a href="rag-one-problem-at-a-time.html">RAG, one problem at a time</a></li>
+</ul>
+
+<footer>
+  <p>Implementation in <a href="https://github.com/sadvi11/amazon-connect-rag-agent">amazon-connect-rag-agent</a> — <code>src/prompts.py</code>.</p>
+
+  <p><a href="/learn/">← all notes</a></p>
+</footer>
+
+</div>
+</body>
+</html>
