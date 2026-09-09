@@ -190,6 +190,28 @@ def build_index(posts: list[dict]) -> str:
     return "\n".join(out)
 
 
+MANIFEST = HERE / ".generated"
+
+
+def prune(current: set[str]) -> None:
+    """Delete pages whose markdown is gone.
+
+    Without this, removing a note takes it off the index and leaves the page
+    live at its URL. Only files this script previously wrote are removed -
+    hand-written pages were never in the manifest, so a bug here cannot touch
+    them.
+    """
+    previous = set()
+    if MANIFEST.exists():
+        previous = {line.strip() for line in MANIFEST.read_text().splitlines() if line.strip()}
+    for orphan in sorted(previous - current):
+        target = HERE / orphan
+        if target.exists():
+            target.unlink()
+            print(f"  removed {orphan} (its markdown is gone)")
+    MANIFEST.write_text("\n".join(sorted(current)) + "\n")
+
+
 def main() -> int:
     paths = sorted(p for p in POSTS.glob("*.md") if p.stem != "TEMPLATE")
     if not paths:
@@ -217,6 +239,8 @@ def main() -> int:
     if "<!-- POSTS -->" not in idx:
         sys.exit("index.html is missing the <!-- POSTS --> markers")
     (HERE / "index.html").write_text(new)
+    prune({f"{p['slug']}.html" for p in posts})
+
     print(f"\n  {len(posts)} notes across {len({p['topic'] for p in posts})} topics")
     return 0
 
